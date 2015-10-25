@@ -22,26 +22,7 @@ public class Bullet : MonoBehaviour {
     public void ManualStart()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _trail = GetComponent<TrailRenderer>();
         _gameObject = gameObject;
-        CancelBullet();
-    }
-
-    public void Enable(Vector3 p_position)
-    {
-        _isActive = true;
-        _gameObject.transform.position = p_position;
-        _trail.enabled = true;
-        _gameObject.SetActive(true);
-        Invoke("CancelBullet", 2f);
-    }
-
-    public void CancelBullet()
-    {
-        _trail.enabled = false;
-        _rigidbody.velocity = Vector3.zero;
-        transform.position = Vector3.zero;
-        _gameObject.SetActive(false);
-        _isActive = false;
+        Destroy(_gameObject, 2f);
     }
 }
