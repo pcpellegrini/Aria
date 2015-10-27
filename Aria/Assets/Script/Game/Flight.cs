@@ -6,14 +6,16 @@ using System.Collections.Generic;
 public class Flight : MonoBehaviour
 {
 
-    public float constSpeed = 2000f;
-    public float maxSpeed = 8000f;
+    public float breakSpeed = 1500f;
+    public float constSpeed = 6000f;
+    public float maxSpeed = 1200f;
     public float acceleration = 50f;
     public float rotationRollSpeed = 600.0f;
     public float rotationYawSpeed = 150.0f;
     public float rotationPitchSpeed = 150.0f;
     public Camera camera_TPV;
     public Camera camera_FPV;
+    public Camera camera_TPVBack;
     public Transform centerOfMass;
     public CameraContoller cameraTPVController;
 
@@ -22,6 +24,12 @@ public class Flight : MonoBehaviour
     {
         get { return _rotating; }
         set { _rotating = value; }
+    }
+    private bool _inGame;
+    public bool inGame
+    {
+        get { return _inGame; }
+        set { _inGame = value; }
     }
     private bool _pitching;
     public bool pitching
@@ -34,6 +42,12 @@ public class Flight : MonoBehaviour
     {
         get { return _accelerating; }
         set { _accelerating = value; }
+    }
+    private bool _breaking;
+    public bool breaking
+    {
+        get { return _breaking; }
+        set { _breaking = value; }
     }
     private bool _lockRotation;
     public bool lockRotation
@@ -65,9 +79,20 @@ public class Flight : MonoBehaviour
         get { return _currentSpeed; }
         set { _currentSpeed = value; }
     }
+    private float _acceleratorValue;
+    public float acceleratorValue
+    {
+        get { return _acceleratorValue; }
+        set { _acceleratorValue = value; }
+    }
+    private float _breakValue;
+    public float breakValue
+    {
+        get { return _breakValue; }
+        set { _breakValue = value; }
+    }
 
     private bool _applyingForce;
-    private bool _inGame;
     private float _roll;
     private float _pitch;
     private float _yaw;
@@ -107,11 +132,17 @@ public class Flight : MonoBehaviour
     {
         if (_accelerating && _currentSpeed < maxSpeed)
         {
-            _currentSpeed += acceleration;
+            _currentSpeed += acceleration * _acceleratorValue;
             if (camera_TPV.enabled)
                 cameraTPVController.ChangePosition("z", acceleration * 0.1f);
         }
-        else if (!_accelerating && _currentSpeed != constSpeed)
+        else if(_breaking && _currentSpeed > breakSpeed)
+        {
+            if (!cameraTPVController.normalizeZPosition && cameraTPVController.NeedsNormalize("z"))
+                cameraTPVController.normalizeZPosition = true;
+            _currentSpeed -= acceleration * _breakValue;
+        }
+        else if (!_accelerating && !_breaking && _currentSpeed != constSpeed)
         {
             if (!cameraTPVController.normalizeZPosition && cameraTPVController.NeedsNormalize("z"))
                 cameraTPVController.normalizeZPosition = true;
