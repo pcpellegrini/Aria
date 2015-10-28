@@ -17,6 +17,7 @@ public class AirCraft : MonoBehaviour {
     public float normalWeaponSpeed = 0.01f;
     public float normalWeaponTime = 0.1f;
     public Flight flightController;
+    public AircraftCollisionManager collisionManager;
     public GameObject airCraftBody;
     public ParticleSystem fireEmissionL;
     public ParticleSystem fireEmissionR;
@@ -44,6 +45,8 @@ public class AirCraft : MonoBehaviour {
     private float _timeDT;
     private int _animIDBarrelLeft;
     private int _animIDBarrelRight;
+    private int _animIDAcc;
+    private int _animIDBoost;
     private CameraContoller.cameraType _currentCamera;
     private AudioSource _audioSource;
     private Rigidbody _rigidbody;
@@ -55,7 +58,19 @@ public class AirCraft : MonoBehaviour {
         _anim = airCraftBody.GetComponent<Animator>();
         _animIDBarrelLeft = Animator.StringToHash("BarrelRollLeft");
         _animIDBarrelRight = Animator.StringToHash("BarrelRollRight");
+        _animIDAcc = Animator.StringToHash("Accelerate");
+        _animIDBoost = Animator.StringToHash("Boost");
+        _anim.SetBool(_animIDAcc, true);
         _currentCamera = CameraContoller.cameraType.FIRST_PERSON_VISION;
+        collisionManager.ManualStart();
+        collisionManager.onHitGround += delegate
+        {
+            //flightController.ApplyImpactForce();
+        };
+        collisionManager.onHitStaticObject += delegate
+        {
+
+        };
     }
 
     void FixedUpdate()
@@ -76,6 +91,7 @@ public class AirCraft : MonoBehaviour {
         // Boost
         if (__accelerator > 0f)
         {
+            _anim.SetBool(_animIDBoost, true);
             flightController.acceleratorValue = __accelerator;
             flightController.accelerating = true;
             boostSource.Play();
@@ -86,6 +102,7 @@ public class AirCraft : MonoBehaviour {
         }
         else if (flightController.accelerating)
         {
+            _anim.SetBool(_animIDBoost, false);
             flightController.accelerating = false;
             flightController.acceleratorValue = 0f;
             fireEmissionBoostL.enableEmission = false;
@@ -97,6 +114,7 @@ public class AirCraft : MonoBehaviour {
         // Break
         if (__breaker > 0f)
         {
+            _anim.SetBool(_animIDAcc, false);
             fireEmissionL.startSpeed = 0f;
             fireEmissionR.startSpeed = 0f;
             flightController.breakValue = __breaker;
@@ -104,6 +122,7 @@ public class AirCraft : MonoBehaviour {
         }
         else if (flightController.breaking)
         {
+            _anim.SetBool(_animIDAcc, true);
             fireEmissionL.startSpeed = 4.6f;
             fireEmissionR.startSpeed = 4.6f;
             flightController.breaking = false;

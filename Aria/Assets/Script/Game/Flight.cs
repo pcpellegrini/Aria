@@ -126,6 +126,11 @@ public class Flight : MonoBehaviour
             RotationContol();
             AccelerationControl();
         }
+        else if (!_applyingForce)
+        {
+            Vector3 __dir = new Vector3(_rigidbody.velocity.x, -_rigidbody.velocity.y*100, _rigidbody.velocity.z);
+            _rigidbody.velocity = __dir;
+        }
     }
 
     private void AccelerationControl()
@@ -244,5 +249,16 @@ public class Flight : MonoBehaviour
             }
             _roll = (_timeDT * _rollAdditive);
         }
+    }
+
+    public void ApplyImpactForce()
+    {
+        _applyingForce = true;
+        Invoke("CancelImpactForce", 1f);
+    }
+
+    private void CancelImpactForce()
+    {
+        _applyingForce = false;
     }
 }

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Script\Game\AirCraft.cs" />
+     <Compile Include="Assets\Script\Game\AircraftCollisionManager.cs" />
      <Compile Include="Assets\Script\Game\AnimationController.cs" />
      <Compile Include="Assets\Script\Game\Flight.cs" />
      <Compile Include="Assets\Script\Test\Bullet.cs" />
