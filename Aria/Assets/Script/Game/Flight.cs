@@ -13,6 +13,7 @@ public class Flight : MonoBehaviour
     public float rotationRollSpeed = 600.0f;
     public float rotationYawSpeed = 150.0f;
     public float rotationPitchSpeed = 150.0f;
+    public float impactForce = 50f;
     public Camera camera_TPV;
     public Camera camera_FPV;
     public Camera camera_TPVBack;
@@ -67,6 +68,12 @@ public class Flight : MonoBehaviour
         get { return _rotationDirection; }
         set { _rotationDirection = value; }
     }
+    private bool _applyingForce;
+    public bool applyingForce
+    {
+        get { return _applyingForce; }
+        set { _applyingForce = value; }
+    }
     private float _pitchDirection;
     public float pitchDirection
     {
@@ -92,7 +99,7 @@ public class Flight : MonoBehaviour
         set { _breakValue = value; }
     }
 
-    private bool _applyingForce;
+    
     private float _roll;
     private float _pitch;
     private float _yaw;
@@ -126,9 +133,9 @@ public class Flight : MonoBehaviour
             RotationContol();
             AccelerationControl();
         }
-        else if (!_applyingForce)
+        else if (_applyingForce)
         {
-            Vector3 __dir = new Vector3(_rigidbody.velocity.x, -_rigidbody.velocity.y*100, _rigidbody.velocity.z);
+            Vector3 __dir = new Vector3(_rigidbody.velocity.x, impactForce, _rigidbody.velocity.z);
             _rigidbody.velocity = __dir;
         }
     }
@@ -254,7 +261,7 @@ public class Flight : MonoBehaviour
     public void ApplyImpactForce()
     {
         _applyingForce = true;
-        Invoke("CancelImpactForce", 1f);
+        
     }
 
     private void CancelImpactForce()

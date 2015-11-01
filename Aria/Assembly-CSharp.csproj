@@ -47,9 +47,16 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Script\Game\AirCraft.cs" />
+     <Compile Include="Assets\Script\Game\Aircraft01.cs" />
+     <Compile Include="Assets\Script\Game\Aircraft02.cs" />
+     <Compile Include="Assets\Script\Game\Aircraft03.cs" />
      <Compile Include="Assets\Script\Game\AircraftCollisionManager.cs" />
      <Compile Include="Assets\Script\Game\AnimationController.cs" />
      <Compile Include="Assets\Script\Game\Flight.cs" />
+     <Compile Include="Assets\Script\Game\GuiManager.cs" />
+     <Compile Include="Assets\Script\Menu\Info.cs" />
+     <Compile Include="Assets\Script\Menu\MenuManager.cs" />
+     <Compile Include="Assets\Script\Menu\SoundManager.cs" />
      <Compile Include="Assets\Script\Test\Bullet.cs" />
      <Compile Include="Assets\Script\Test\CameraContoller.cs" />
      <Compile Include="Assets\Script\Test\Manager.cs" />

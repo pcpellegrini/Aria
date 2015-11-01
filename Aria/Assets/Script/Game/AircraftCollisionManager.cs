@@ -6,9 +6,10 @@ public class AircraftCollisionManager : MonoBehaviour {
 
     public event Action onHitGround;
     public event Action onHitStaticObject;
+    public event Action onHitEnemy;
 
-	// Use this for initialization
-	public void ManualStart () {
+    // Use this for initialization
+    public void ManualStart () {
 	
 	}
 
@@ -24,6 +25,11 @@ public class AircraftCollisionManager : MonoBehaviour {
         {
             if (onHitStaticObject != null)
                 onHitStaticObject();
+        }
+        else if (__GO.tag == "enemy")
+        {
+            if (onHitEnemy != null)
+                onHitEnemy();
         }
     }
 }

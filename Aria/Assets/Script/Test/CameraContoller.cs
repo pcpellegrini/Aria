@@ -171,7 +171,6 @@ public class CameraContoller : MonoBehaviour {
                     _lerpStartPosition.z = 0f;
                 }
                 return __percentageCompleteZ;
-                break;
             case "y":
                 if (!_isLerping[1])
                 {
