@@ -137,6 +137,7 @@ public class Flight : MonoBehaviour
         {
             Vector3 __dir = new Vector3(_rigidbody.velocity.x, impactForce, _rigidbody.velocity.z);
             _rigidbody.velocity = __dir;
+            SpecialRotation();
         }
     }
 
@@ -171,6 +172,17 @@ public class Flight : MonoBehaviour
         _AddPos = Vector3.forward;
         _AddPos = _rigidbody.rotation * _AddPos;
         _rigidbody.velocity = _AddPos * (_timeDT * _currentSpeed);
+    }
+
+    private void SpecialRotation()
+    {
+        if (_pitch > 0)
+        {
+            _pitchAdditive += (rotationPitchSpeed * -1);
+            _pitch = (_timeDT * _pitchAdditive);
+            _AddRotation.eulerAngles = new Vector3(_pitch, _yaw, -_roll);
+            _rigidbody.rotation = _AddRotation;
+        }
     }
 
     private void RotationContol()

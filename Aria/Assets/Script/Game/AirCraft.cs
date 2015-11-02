@@ -20,6 +20,7 @@ public class AirCraft : MonoBehaviour {
     public float normalWeaponTime = 0.1f;
     public float normalWeaponHeatTime = 3f;
     public float normalWeaponRepairTime = 2f;
+    public SoundController soundController;
     public GameObject airCraftBody;
     public ParticleSystem[] fireEmission;
     public ParticleSystem[] fireEmissionBoost;
@@ -30,13 +31,11 @@ public class AirCraft : MonoBehaviour {
     public GameObject[] fireEffectRight2;
     public Transform fireExit;
     public Transform fireExitR;
-
-    public AudioSource boostSource;
-    public AudioSource specialWeaponSource;
-    public AudioSource normalWeaponSource;
+    public AudioClip engineSound;
+    public AudioClip boostSound;
     public AudioClip[] normalWeaponSound;
     public AudioClip[] specialWeaponSound;
-    
+
     protected bool _normalGunFiring;
     protected bool _normalGunLocked;
     protected bool _specialGunFiring;
@@ -50,7 +49,7 @@ public class AirCraft : MonoBehaviour {
     protected int _animIDAcc;
     protected int _animIDBoost;
     protected int _animIDShake;
-    protected int _animIDShakeInside;
+    protected int _animIDShakeFPS;
     protected CameraContoller.cameraType _currentCamera;
     protected AircraftCollisionManager _collisionManager;
     protected Flight _flightController;
@@ -61,10 +60,10 @@ public class AirCraft : MonoBehaviour {
     protected AudioSource _audioSource;
     protected Rigidbody _rigidbody;
     protected Animator _anim;
-    protected Animator _mainAnim;
 
-    public virtual void ManualStart (GameObject p_bullet, GameObject p_panel, GuiManager p_gui, GameObject p_aim) {
+    public virtual void ManualStart (GameObject p_bullet, GameObject p_panel, GuiManager p_gui, GameObject p_aim, AudioSource p_musicSource, AudioClip p_musicLevel) {
 
+        soundController.musicSound = p_musicSource;
         _specialBullet = p_bullet;
         _instPanel = p_panel;
         _guiManager = p_gui;
@@ -78,20 +77,20 @@ public class AirCraft : MonoBehaviour {
 
         _initialEmissionStartSpeed = fireEmission[0].startSpeed;
         _emissionLightNormalIntensity = lightEmission[0].intensity;
+
         _rigidbody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
-        _anim = airCraftBody.GetComponent<Animator>();
-        _mainAnim = GetComponent<Animator>();
+        _anim = GetComponent<Animator>();
         _flightController = GetComponent<Flight>();
         _collisionManager = GetComponent<AircraftCollisionManager>();
 
 
         _animIDBarrelLeft = Animator.StringToHash("BarrelRollLeft");
         _animIDBarrelRight = Animator.StringToHash("BarrelRollRight");
-        _animIDShake = Animator.StringToHash("Shake");
-        _animIDShakeInside = Animator.StringToHash("ShakeInside");
+        _animIDShake = Animator.StringToHash("ShakeThird");
+        _animIDShakeFPS = Animator.StringToHash("ShakeFirst");
         
-        if (currentType == type.AIRCRAFT_1)
+        if (currentType != type.AIRCRAFT_3)
         {
             _animIDAcc = Animator.StringToHash("Accelerate");
             _animIDBoost = Animator.StringToHash("Boost");
@@ -106,13 +105,13 @@ public class AirCraft : MonoBehaviour {
             _flightController.ApplyImpactForce();
             if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
             {
-                _anim.SetTrigger(_animIDShakeInside);
+                _anim.SetTrigger(_animIDShakeFPS);
                 Invoke("CancelAnim", 0.5f);
             }
             else
             {
                 //_mainAnim.enabled = true;
-                _mainAnim.SetTrigger(_animIDShake);
+                _anim.SetTrigger(_animIDShake);
                 Invoke("CancelAnim", 0.5f);
             }
         };
@@ -122,13 +121,13 @@ public class AirCraft : MonoBehaviour {
             _flightController.ApplyImpactForce();
             if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
             {
-                _anim.SetTrigger(_animIDShakeInside);
+                _anim.SetTrigger(_animIDShakeFPS);
                 Invoke("CancelAnim", 0.5f);
             }
             else
             {
                 //_mainAnim.enabled = true;
-                _mainAnim.SetTrigger(_animIDShake);
+                _anim.SetTrigger(_animIDShake);
                 Invoke("CancelAnim", 0.5f);
             }
         };
@@ -138,16 +137,25 @@ public class AirCraft : MonoBehaviour {
             _flightController.ApplyImpactForce();
             if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
             {
-                _anim.SetTrigger(_animIDShakeInside);
+                _anim.SetTrigger(_animIDShakeFPS);
                 Invoke("CancelAnim", 0.5f);
             }
             else
             {
                 //_mainAnim.enabled = true;
-                _mainAnim.SetTrigger(_animIDShake);
+                _anim.SetTrigger(_animIDShake);
                 Invoke("CancelAnim", 0.5f);
             }
         };
+
+        soundController.PlaySound(SoundController.source.MUSIC, p_musicLevel);
+        soundController.PlaySound(SoundController.source.ENGINE, engineSound);
+
+        // Change camera
+        _currentCamera = CameraContoller.cameraType.THIRD_PERSON_VSION;
+        _flightController.camera_TPV.enabled = true;
+        _flightController.camera_FPV.enabled = false;
+        soundController.InsideCockpit(false);
     }
 
     public virtual void DecreaseEnergy(float p_value)
@@ -188,13 +196,12 @@ public class AirCraft : MonoBehaviour {
         float __breaker = Input.GetAxis("Break");
 
         // Boost
-        if (__accelerator > 0f)
+        if (__accelerator > 0f && !_flightController.accelerating)
         {
-            if (currentType == type.AIRCRAFT_1)
-                _anim.SetBool(_animIDBoost, true);
+            ChangeSpeed("boost");
             _flightController.acceleratorValue = __accelerator;
             _flightController.accelerating = true;
-            boostSource.Play();
+            soundController.PlaySound(SoundController.source.BOOST, boostSound);
             for (int i = 0; i < lightEmission.Length; i++)
             {
                 int __num = i;
@@ -211,10 +218,10 @@ public class AirCraft : MonoBehaviour {
                 fireEmissionBoost[__num].enableEmission = true;
             }
         }
-        else if (_flightController.accelerating)
+        else if (__accelerator == 0f && _flightController.accelerating)
         {
-            if (currentType == type.AIRCRAFT_1)
-                _anim.SetBool(_animIDBoost, false);
+            ChangeSpeed("normal");
+            soundController.StopSound(SoundController.source.BOOST);
             _flightController.accelerating = false;
             _flightController.acceleratorValue = 0f;
             for (int i = 0; i < lightEmission.Length; i++)
@@ -235,10 +242,9 @@ public class AirCraft : MonoBehaviour {
         }
 
         // Break
-        if (__breaker > 0f)
+        if (__breaker > 0f && !_flightController.breaking)
         {
-            if (currentType == type.AIRCRAFT_1)
-                _anim.SetBool(_animIDAcc, false);
+            ChangeSpeed("break");                
             for (int i = 0; i < fireEmission.Length; i++)
             {
                 int __num = i;
@@ -252,10 +258,9 @@ public class AirCraft : MonoBehaviour {
             _flightController.breakValue = __breaker;
             _flightController.breaking = true;
         }
-        else if (_flightController.breaking)
+        else if (__breaker == 0f && _flightController.breaking)
         {
-            if (currentType == type.AIRCRAFT_1)
-                _anim.SetBool(_animIDAcc, true);
+            ChangeSpeed("normal");
             for (int i = 0; i < fireEmission.Length; i++)
             {
                 int __num = i;
@@ -289,6 +294,7 @@ public class AirCraft : MonoBehaviour {
             Debug.Log("ok");
             if (_inGame)
             {
+                soundController.PauseAll(true);
                 _flightController.inGame = false;
                 _inGame = false;
                 Time.timeScale = 0f;
@@ -296,6 +302,9 @@ public class AirCraft : MonoBehaviour {
             }
             else
             {
+                soundController.PauseAll(false);
+                if (!_normalGunFiring)
+                    soundController.StopSound(SoundController.source.NORMAL_WEAPON);
                 _flightController.inGame = true;
                 _inGame = true;
                 Time.timeScale = 1f;
@@ -311,10 +320,7 @@ public class AirCraft : MonoBehaviour {
                 _currentCamera = CameraContoller.cameraType.THIRD_PERSON_VSION;
                 _flightController.camera_TPV.enabled = true;
                 _flightController.camera_FPV.enabled = false;
-                _audioSource.pitch = 1;
-                boostSource.pitch = 1;
-                normalWeaponSource.pitch = 1;
-                specialWeaponSource.pitch = 1;
+                soundController.InsideCockpit(false);
                 //EnableExternal(true);
             }
             else
@@ -322,10 +328,7 @@ public class AirCraft : MonoBehaviour {
                 _currentCamera = CameraContoller.cameraType.FIRST_PERSON_VISION;
                 _flightController.camera_FPV.enabled = true;
                 _flightController.camera_TPV.enabled = false;
-                _audioSource.pitch = 0.5f;
-                boostSource.pitch = 0.5f;
-                normalWeaponSource.pitch = 0.8f;
-                specialWeaponSource.pitch = 0.8f;
+                soundController.InsideCockpit(true);
                 //EnableExternal(false);
             }
         }
@@ -426,6 +429,11 @@ public class AirCraft : MonoBehaviour {
         }
     }
 
+    public virtual void ChangeSpeed(string p_state)
+    {
+
+    }
+
     public virtual void EndAnimation(string p_anim)
     {
         switch (p_anim)
@@ -443,18 +451,16 @@ public class AirCraft : MonoBehaviour {
             case "normal":
                 if (p_state)
                 {
-                    int __randSound = Random.Range(0, normalWeaponSound.Length);
-                    normalWeaponSource.clip = normalWeaponSound[__randSound];
-                    normalWeaponSource.Play();
+                    int __rndNormal = Random.Range(0, normalWeaponSound.Length);
+                    soundController.PlaySound(SoundController.source.NORMAL_WEAPON, normalWeaponSound[__rndNormal]);
                     //Invoke("ChangeNormalWeaponSound", normalWeaponSound[__randSound].length);
                 }
                 else
-                    normalWeaponSource.Stop();
+                    soundController.StopSound(SoundController.source.NORMAL_WEAPON);
                 break;
             case "special":
-                int __randSound2 = Random.Range(0, specialWeaponSound.Length);
-                specialWeaponSource.clip = specialWeaponSound[__randSound2];
-                specialWeaponSource.Play();
+                int __rnd = Random.Range(0, specialWeaponSound.Length);
+                soundController.PlaySound(SoundController.source.SPECIAL_WEAPON, specialWeaponSound[__rnd]);
                 break;
         }
     }
@@ -462,8 +468,7 @@ public class AirCraft : MonoBehaviour {
     public virtual void ChangeNormalWeaponSound()
     {
         int __randSound = Random.Range(0, normalWeaponSound.Length);
-        normalWeaponSource.clip = normalWeaponSound[__randSound];
-        normalWeaponSource.Play();
+        soundController.PlaySound(SoundController.source.NORMAL_WEAPON, normalWeaponSound[__randSound]);
     }
 
     public virtual void NormalFireCaller()

@@ -54,6 +54,7 @@
      <Compile Include="Assets\Script\Game\AnimationController.cs" />
      <Compile Include="Assets\Script\Game\Flight.cs" />
      <Compile Include="Assets\Script\Game\GuiManager.cs" />
+     <Compile Include="Assets\Script\Game\SoundController.cs" />
      <Compile Include="Assets\Script\Menu\Info.cs" />
      <Compile Include="Assets\Script\Menu\MenuManager.cs" />
      <Compile Include="Assets\Script\Menu\SoundManager.cs" />

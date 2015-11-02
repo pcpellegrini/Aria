@@ -8,12 +8,10 @@ public class Tower : MonoBehaviour {
     public float hp;
 
     private Collider _collider;
-    private AudioSource _audioSource;
     private Renderer _renderer;
 	void Start () {
         explosionParticle.Stop();
         _collider = GetComponent<Collider>();
-        _audioSource = GetComponent<AudioSource>();
         _renderer = transform.GetChild(0).GetComponent<Renderer>();
     }
 
@@ -29,7 +27,6 @@ public class Tower : MonoBehaviour {
             Destroy(p_bullet);
         hp -= p_damage;
         _renderer.material.color += new Color(0.5f, 0f, 0f);
-        _audioSource.Play();
         if (hp <= 0)
             TowerDeath();
     }

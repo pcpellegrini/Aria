@@ -25,6 +25,7 @@ public class GuiManager : MonoBehaviour {
         }
         menuBtn.onClick.AddListener(delegate
         {
+            Time.timeScale = 1f;
             Application.LoadLevel("Menu");
         });
     }

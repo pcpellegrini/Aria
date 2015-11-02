@@ -7,4 +7,20 @@ public class Aircraft03 : AirCraft {
     {
         base.InputControl();
     }
+
+    public override void ChangeSpeed(string p_state)
+    {
+        switch (p_state)
+        {
+            case "break":
+
+                break;
+            case "normal":
+
+                break;
+            case "boost":
+
+                break;
+        }
+    }
 }

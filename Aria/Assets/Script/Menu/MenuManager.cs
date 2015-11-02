@@ -5,52 +5,63 @@ using UnityEngine.UI;
 public class MenuManager : MonoBehaviour {
 
     public Info gameInfo;
+	public SoundManager soundManager;
     public GameObject mainPanel;
     public GameObject selectionPanel;
-    public Button playBtn;
-    public Button exitBtn;
-    public Button backBtn;
-    public Button startBtn;
-    public Button[] aircraftBtn;
+	public GameObject optionsPanel;
+    public GameObject creditsPanel;
+
+    private GameObject _currentPanel;
+	private GameObject _previousPanel;
 
     void Start () {
-        // Main Menu
-        playBtn.onClick.AddListener(delegate
-        {
-            mainPanel.SetActive(false);
-            selectionPanel.SetActive(true);
-        });
-        exitBtn.onClick.AddListener(delegate
-        {
-            Application.Quit();
-        });
-        // Selection Menu
-        backBtn.onClick.AddListener(delegate
-        {
-            for (int j = 0; j < aircraftBtn.Length; j++)
-            {
-                aircraftBtn[j].image.color = Color.white;
-            }
-            mainPanel.SetActive(true);
-            selectionPanel.SetActive(false);
-        });
-
-        for (int i = 0; i < aircraftBtn.Length; i++)
-        {
-            int __num = i;
-            aircraftBtn[__num].onClick.AddListener(delegate
-            {
-                for (int j = 0; j < aircraftBtn.Length; j++)
-                {
-                    aircraftBtn[j].image.color = Color.white;
-                }
-                aircraftBtn[__num].image.color = Color.red;
-                gameInfo.selectedAircraft = (AirCraft.type)__num;
-            });
-        }
-        startBtn.onClick.AddListener(delegate
-        {
-            Application.LoadLevel("01");
-        });
+		_currentPanel = mainPanel;
     }
+
+	public void ChangeMenu(string p_menu)
+	{
+		switch (p_menu)
+		{
+		case "main":
+			_currentPanel.SetActive(false);
+			_previousPanel.SetActive(true);
+			_currentPanel = _previousPanel;
+			_previousPanel = null;
+			break;
+		case "selection":
+			_previousPanel = mainPanel;
+			_currentPanel = selectionPanel;
+			mainPanel.SetActive(false);
+			selectionPanel.SetActive(true);
+			break;
+		case "options":
+            _previousPanel = mainPanel;
+			_currentPanel = optionsPanel;
+			mainPanel.SetActive(false);
+			optionsPanel.SetActive(true);
+			break;
+		case "credits":
+            _previousPanel = mainPanel;
+			_currentPanel = creditsPanel;
+			mainPanel.SetActive(false);
+			creditsPanel.SetActive(true);
+			break;
+		case "quit":
+			Application.Quit();
+			break;
+		case "startGame":
+			Application.LoadLevel("01");
+			break;
+		}
+	}
+
+	public void SelectAircraft(int p_type)
+	{
+		gameInfo.selectedAircraft = (AirCraft.type)p_type;
+	}
+
+	public void SaveOptions()
+	{
+		soundManager.SaveOptions ();
+	}
 }
