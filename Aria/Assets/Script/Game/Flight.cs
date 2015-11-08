@@ -14,11 +14,8 @@ public class Flight : MonoBehaviour
     public float rotationYawSpeed = 150.0f;
     public float rotationPitchSpeed = 150.0f;
     public float impactForce = 50f;
-    public Camera camera_TPV;
-    public Camera camera_FPV;
-    public Camera camera_TPVBack;
     public Transform centerOfMass;
-    public CameraContoller cameraTPVController;
+    public GameObject bodyShip;
 
     private bool _rotating;
     public bool rotating
@@ -98,9 +95,13 @@ public class Flight : MonoBehaviour
         get { return _breakValue; }
         set { _breakValue = value; }
     }
-
     
+
     private float _roll;
+    public float roll
+    {
+        get { return _roll; }
+    }
     private float _pitch;
     private float _yaw;
     private float _timeDT;
@@ -119,6 +120,7 @@ public class Flight : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.centerOfMass = centerOfMass.position;
+        _rigidbody.transform.TransformPoint(centerOfMass.position);
         AccelerationControl();
         _inGame = true;
         
@@ -146,19 +148,13 @@ public class Flight : MonoBehaviour
         if (_accelerating && _currentSpeed < maxSpeed)
         {
             _currentSpeed += acceleration * _acceleratorValue;
-            if (camera_TPV.enabled)
-                cameraTPVController.ChangePosition("z", acceleration * 0.1f);
         }
         else if(_breaking && _currentSpeed > breakSpeed)
         {
-            if (!cameraTPVController.normalizeZPosition && cameraTPVController.NeedsNormalize("z"))
-                cameraTPVController.normalizeZPosition = true;
             _currentSpeed -= acceleration * _breakValue;
         }
         else if (!_accelerating && !_breaking && _currentSpeed != constSpeed)
         {
-            if (!cameraTPVController.normalizeZPosition && cameraTPVController.NeedsNormalize("z"))
-                cameraTPVController.normalizeZPosition = true;
             if (_currentSpeed - acceleration < constSpeed)
             {
                 _currentSpeed = constSpeed;
@@ -170,8 +166,8 @@ public class Flight : MonoBehaviour
         }
 
         _AddPos = Vector3.forward;
-        _AddPos = _rigidbody.rotation * _AddPos;
-        _rigidbody.velocity = _AddPos * (_timeDT * _currentSpeed);
+        //_AddPos = _rigidbody.rotation * _AddPos;
+        _rigidbody.velocity = bodyShip.transform.forward * (_timeDT * _currentSpeed);
     }
 
     private void SpecialRotation()
@@ -201,27 +197,11 @@ public class Flight : MonoBehaviour
             
             _yawAdditive += (rotationYawSpeed * _rotationDirection);
             _yaw = (_timeDT * _yawAdditive);
-            if (camera_TPV.enabled)
-            {
-                cameraTPVController.ChangePosition("x", _rotationDirection);
-            }
-        }
-        else
-        {
-            if (cameraTPVController.NeedsNormalize("x") && !cameraTPVController.normalizeXPosition)
-                cameraTPVController.normalizeXPosition = true;
         }
         if (_pitching)
         {
             _pitchAdditive += (rotationPitchSpeed * _pitchDirection);
             _pitch = (_timeDT * _pitchAdditive);
-            if (camera_TPV.enabled)
-                cameraTPVController.ChangePosition("y", _pitchDirection);
-        }
-        else
-        {
-            if (cameraTPVController.NeedsNormalize("y") && !cameraTPVController.normalizeYPosition)
-                cameraTPVController.normalizeYPosition = true;
         }
 
         if ((!_rotating))
@@ -230,10 +210,7 @@ public class Flight : MonoBehaviour
         // Change rotation
         _AddRotation.eulerAngles = new Vector3(_pitch, _yaw, -_roll);
         _rigidbody.rotation = _AddRotation;
-
-        // Third person camera rotation
-        _AddRotationCameraTPV.eulerAngles = new Vector3(_pitch, _yaw, 0);
-        camera_TPV.transform.rotation = _AddRotationCameraTPV;
+        
     }
 
     private void NormalizeRotation()

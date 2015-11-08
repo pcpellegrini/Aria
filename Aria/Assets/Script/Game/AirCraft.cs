@@ -20,6 +20,9 @@ public class AirCraft : MonoBehaviour {
     public float normalWeaponTime = 0.1f;
     public float normalWeaponHeatTime = 3f;
     public float normalWeaponRepairTime = 2f;
+    public CameraContoller FPSCameraController;
+    public CameraContoller TPSCameraController;
+    public Camera cameraBack;
     public SoundController soundController;
     public GameObject airCraftBody;
     public ParticleSystem[] fireEmission;
@@ -36,6 +39,8 @@ public class AirCraft : MonoBehaviour {
     public AudioClip[] normalWeaponSound;
     public AudioClip[] specialWeaponSound;
 
+    
+
     protected bool _normalGunFiring;
     protected bool _normalGunLocked;
     protected bool _specialGunFiring;
@@ -44,13 +49,13 @@ public class AirCraft : MonoBehaviour {
     protected float _normalWeaponHeatCount;
     protected float _initialEmissionStartSpeed;
     protected float _emissionLightNormalIntensity;
+    protected float _speed;
     protected int _animIDBarrelLeft;
     protected int _animIDBarrelRight;
     protected int _animIDAcc;
     protected int _animIDBoost;
     protected int _animIDShake;
-    protected int _animIDShakeFPS;
-    protected CameraContoller.cameraType _currentCamera;
+    protected CameraContoller _currentCameraController;
     protected AircraftCollisionManager _collisionManager;
     protected Flight _flightController;
     protected GameObject _specialBullet;
@@ -62,6 +67,16 @@ public class AirCraft : MonoBehaviour {
     protected Animator _anim;
 
     public virtual void ManualStart (GameObject p_bullet, GameObject p_panel, GuiManager p_gui, GameObject p_aim, AudioSource p_musicSource, AudioClip p_musicLevel) {
+
+        _rigidbody = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
+        _anim = GetComponent<Animator>();
+        _flightController = GetComponent<Flight>();
+        _collisionManager = GetComponent<AircraftCollisionManager>();
+
+        TPSCameraController.ManualStart(_rigidbody);
+        FPSCameraController.ManualStart(_rigidbody);
+        _currentCameraController = TPSCameraController;
 
         soundController.musicSound = p_musicSource;
         _specialBullet = p_bullet;
@@ -78,17 +93,10 @@ public class AirCraft : MonoBehaviour {
         _initialEmissionStartSpeed = fireEmission[0].startSpeed;
         _emissionLightNormalIntensity = lightEmission[0].intensity;
 
-        _rigidbody = GetComponent<Rigidbody>();
-        _audioSource = GetComponent<AudioSource>();
-        _anim = GetComponent<Animator>();
-        _flightController = GetComponent<Flight>();
-        _collisionManager = GetComponent<AircraftCollisionManager>();
-
 
         _animIDBarrelLeft = Animator.StringToHash("BarrelRollLeft");
         _animIDBarrelRight = Animator.StringToHash("BarrelRollRight");
         _animIDShake = Animator.StringToHash("ShakeThird");
-        _animIDShakeFPS = Animator.StringToHash("ShakeFirst");
         
         if (currentType != type.AIRCRAFT_3)
         {
@@ -97,64 +105,33 @@ public class AirCraft : MonoBehaviour {
         }
         if (currentType == type.AIRCRAFT_1)
             _anim.SetBool(_animIDAcc, true);
-        _currentCamera = CameraContoller.cameraType.FIRST_PERSON_VISION;
         _collisionManager.ManualStart();
         _collisionManager.onHitGround += delegate
         {
             DecreaseEnergy(5f);
             _flightController.ApplyImpactForce();
-            if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
-            {
-                _anim.SetTrigger(_animIDShakeFPS);
-                Invoke("CancelAnim", 0.5f);
-            }
-            else
-            {
-                //_mainAnim.enabled = true;
                 _anim.SetTrigger(_animIDShake);
                 Invoke("CancelAnim", 0.5f);
-            }
         };
         _collisionManager.onHitStaticObject += delegate
         {
             DecreaseEnergy(5f);
             _flightController.ApplyImpactForce();
-            if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
-            {
-                _anim.SetTrigger(_animIDShakeFPS);
-                Invoke("CancelAnim", 0.5f);
-            }
-            else
-            {
-                //_mainAnim.enabled = true;
-                _anim.SetTrigger(_animIDShake);
-                Invoke("CancelAnim", 0.5f);
-            }
+            _anim.SetTrigger(_animIDShake);
+            Invoke("CancelAnim", 0.5f);
         };
         _collisionManager.onHitEnemy += delegate
         {
             DecreaseEnergy(10f);
             _flightController.ApplyImpactForce();
-            if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
-            {
-                _anim.SetTrigger(_animIDShakeFPS);
-                Invoke("CancelAnim", 0.5f);
-            }
-            else
-            {
-                //_mainAnim.enabled = true;
-                _anim.SetTrigger(_animIDShake);
-                Invoke("CancelAnim", 0.5f);
-            }
+            _anim.SetTrigger(_animIDShake);
+            Invoke("CancelAnim", 0.5f);
         };
 
         soundController.PlaySound(SoundController.source.MUSIC, p_musicLevel);
         soundController.PlaySound(SoundController.source.ENGINE, engineSound);
 
         // Change camera
-        _currentCamera = CameraContoller.cameraType.THIRD_PERSON_VSION;
-        _flightController.camera_TPV.enabled = true;
-        _flightController.camera_FPV.enabled = false;
         soundController.InsideCockpit(false);
     }
 
@@ -177,11 +154,13 @@ public class AirCraft : MonoBehaviour {
                 _normalGunLocked = false;
             }
         }
+        _speed = _flightController.currentSpeed;
     }
 
     public virtual void ManualUpdate()
     {
         InputControl();
+        _currentCameraController.ManualFixedUpdate();
     }
 
     public virtual void CancelAnim()
@@ -199,7 +178,7 @@ public class AirCraft : MonoBehaviour {
         if (__accelerator > 0f && !_flightController.accelerating)
         {
             ChangeSpeed("boost");
-            _flightController.acceleratorValue = __accelerator;
+            _flightController.acceleratorValue = 1f;
             _flightController.accelerating = true;
             soundController.PlaySound(SoundController.source.BOOST, boostSound);
             for (int i = 0; i < lightEmission.Length; i++)
@@ -255,7 +234,7 @@ public class AirCraft : MonoBehaviour {
                 int __num = i;
                 lightEmission[__num].intensity = 0.5f;
             }
-            _flightController.breakValue = __breaker;
+            _flightController.breakValue = 1;
             _flightController.breaking = true;
         }
         else if (__breaker == 0f && _flightController.breaking)
@@ -279,14 +258,37 @@ public class AirCraft : MonoBehaviour {
         _flightController.pitchDirection = Input.GetAxis("Vertical");
 
         if (_flightController.rotationDirection != 0f && !_flightController.rotating)
+        {
             _flightController.rotating = true;
+        }
         else if (_flightController.rotating && _flightController.rotationDirection == 0f)
+        {
             _flightController.rotating = false;
+        }
+
+        if (_currentCameraController.type == CameraContoller.cameraType.THIRD_PERSON_VSION)
+            _currentCameraController.roll = _flightController.roll;
 
         if (_flightController.pitchDirection != 0f && !_flightController.pitching)
+        {
             _flightController.pitching = true;
+        }
         else if (_flightController.pitching && _flightController.pitchDirection == 0f)
+        {
             _flightController.pitching = false;
+        }
+
+        // Joystick Aim
+        if (Input.GetAxis("MouseH") != 0 || Input.GetAxis("MouseV") != 0)
+        {
+            Vector2 __dir = new Vector2(Input.GetAxis("MouseH"), Input.GetAxis("MouseV"));
+            _currentCameraController.aimFollowMouse = false;
+            _currentCameraController._mousePos = __dir;
+        }
+        else
+        {
+            _currentCameraController._mousePos = new Vector2(0f, 0f);
+        }
 
         //Pause Game
         if (Input.GetButtonDown("Pause"))
@@ -315,19 +317,19 @@ public class AirCraft : MonoBehaviour {
         // Cameras
         if (Input.GetButtonDown("Camera"))
         {
-            if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
+            if (_currentCameraController.type == CameraContoller.cameraType.FIRST_PERSON_VISION)
             {
-                _currentCamera = CameraContoller.cameraType.THIRD_PERSON_VSION;
-                _flightController.camera_TPV.enabled = true;
-                _flightController.camera_FPV.enabled = false;
+                _currentCameraController = TPSCameraController;
+                TPSCameraController.mainCam.enabled = true;
+                FPSCameraController.mainCam.enabled = false;
                 soundController.InsideCockpit(false);
                 //EnableExternal(true);
             }
             else
             {
-                _currentCamera = CameraContoller.cameraType.FIRST_PERSON_VISION;
-                _flightController.camera_FPV.enabled = true;
-                _flightController.camera_TPV.enabled = false;
+                _currentCameraController = FPSCameraController;
+                FPSCameraController.mainCam.enabled = true;
+                TPSCameraController.mainCam.enabled = false;
                 soundController.InsideCockpit(true);
                 //EnableExternal(false);
             }
@@ -336,24 +338,24 @@ public class AirCraft : MonoBehaviour {
         // Camera Back
         if (Input.GetButtonDown("Camera Back"))
         {
-            _flightController.camera_TPVBack.enabled = true;
-            _flightController.camera_TPV.enabled = false;
-            _flightController.camera_FPV.enabled = false;
+            cameraBack.enabled = true;
+            TPSCameraController.mainCam.enabled = false;
+            FPSCameraController.mainCam.enabled = false;
             _aimHUD.SetActive(false);
         }
         if (Input.GetButtonUp("Camera Back"))
         {
-            _flightController.camera_TPVBack.enabled = false;
+            cameraBack.enabled = false;
             _aimHUD.SetActive(true);
-            if (_currentCamera == CameraContoller.cameraType.FIRST_PERSON_VISION)
+            if (_currentCameraController.type == CameraContoller.cameraType.FIRST_PERSON_VISION)
             {
-                _flightController.camera_TPV.enabled = false;
-                _flightController.camera_FPV.enabled = true;
+                TPSCameraController.mainCam.enabled = false;
+                FPSCameraController.mainCam.enabled = true;
             }
             else
             {
-                _flightController.camera_FPV.enabled = false;
-                _flightController.camera_TPV.enabled = true;
+                TPSCameraController.mainCam.enabled = true;
+                FPSCameraController.mainCam.enabled = false;
             }
 
         }
@@ -535,10 +537,12 @@ public class AirCraft : MonoBehaviour {
                 Invoke("DisableAllFire", normalWeaponTime *0.5f);
                 break;
             case "special":
+                Vector3 __dir = _currentCameraController.AimPosition().direction;
+                Debug.Log(__dir);
                 GameObject __tmpBullet = Instantiate(_specialBullet, fireExit.position, Quaternion.identity) as GameObject;
                 Bullet __bulletCreated = __tmpBullet.GetComponent<Bullet>();
                 __bulletCreated.ManualStart();
-                __bulletCreated.bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * _rigidbody.transform.forward), ForceMode.Impulse);
+                __bulletCreated.bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * __dir), ForceMode.Impulse);
                 FireAction(specialWeaponDamage, specialWeaponSpeed, __tmpBullet);
                 if (currentType != type.AIRCRAFT_1)
                 {
@@ -555,7 +559,7 @@ public class AirCraft : MonoBehaviour {
     public virtual void FireAction(float p_damage, float p_speed, GameObject p_bullet)
     {
         RaycastHit __hit;
-        if (Physics.Raycast(_rigidbody.position, _rigidbody.transform.forward, out __hit, 1000))
+        if (Physics.Raycast(_currentCameraController.AimPosition(), out __hit, 1000))
         {
 
             if (__hit.collider.tag == "tower")

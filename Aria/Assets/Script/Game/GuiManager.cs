@@ -26,6 +26,7 @@ public class GuiManager : MonoBehaviour {
         menuBtn.onClick.AddListener(delegate
         {
             Time.timeScale = 1f;
+            UnityEngine.Cursor.visible = true;
             Application.LoadLevel("Menu");
         });
     }

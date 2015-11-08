@@ -8,204 +8,134 @@ public class CameraContoller : MonoBehaviour {
         FIRST_PERSON_VISION,
         THIRD_PERSON_VSION
     }
-
-    public bool normalizeZPosition;
-    public bool normalizeXPosition;
-    public bool normalizeYPosition;
-    public float cameraMovementSpeed;
+    
     public cameraType type;
-    public Transform follow;
-    public Transform look;
-    public Vector3 distance;
+    public GameObject aim;
+    public Vector2 aimLimits;
 
-    private bool[] _isLerping = new bool[3];
-    private float _timeDT;
-    private float[] _timeTakenDuringLerp = new float[3];
-    private float[] _timeStartedLerping = new float[3];
-    private Vector3 _lerpStartPosition;
-    private Rigidbody _rigidbody;
+    [HideInInspector]
+    public bool aimFollowMouse = true;
+    [HideInInspector]
+    public Vector2 _mousePos;
 
-	// Use this for initialization
-	void Start () {
-        transform.localPosition = distance;
+    protected float _timeDT;
+    protected Rigidbody _rigidbody;
+    protected Camera _camera;
+    public Camera mainCam
+    {
+        get { return _camera; }
+    }
+    protected Vector2 _mouseOrigin;
+    protected Vector2 _camLimitsMin = new Vector2(-20, -5);
+    protected Vector2 _camLimitsMax = new Vector2(20, 40);
+    protected Vector2 _camLimitsRotationMin = new Vector2(355, 330);
+    protected Vector2 _camLimitsRotationMax = new Vector2(30, 30);
+    protected Rigidbody _mainRigidbody;
+
+    private float _roll;
+    public float roll
+    {
+        get { return _roll; }
+        set { _roll = value; }
+    }
+
+    // Use this for initialization
+    public virtual void ManualStart (Rigidbody p_rigibody) {
+        _mainRigidbody = p_rigibody;
         _timeDT = Time.deltaTime;
-
+        _camera = GetComponent<Camera>();
+        _mouseOrigin = new Vector2(0.5f, 0.5f);
     }
 	
 	// Update is called once per frame
-	void FixedUpdate () {
-        _timeDT = Time.deltaTime;
+	public virtual void ManualFixedUpdate () {
 
-        if (normalizeXPosition)
+        Vector2 __aimScreen = _camera.WorldToViewportPoint(aim.transform.position);
+        Vector2 __mousePos;
+        if (aimFollowMouse)
         {
-            float __dist = transform.localPosition.x - distance.x;
-            if (__dist < 0)
-                __dist = -__dist;
-            ChangeToOriginalPosition("x", __dist);
+            __mousePos = _camera.ScreenToViewportPoint(Input.mousePosition);
         }
-        else if (_isLerping[0])
-            _isLerping[0] = false;
-
-        if (normalizeYPosition)
+        else
         {
-            float __dist = transform.localPosition.y - distance.y;
-            if (__dist < 0)
-                __dist = -__dist;
-            ChangeToOriginalPosition("y", __dist);
+            __mousePos = __aimScreen + _mousePos*0.02f;
         }
-        else if (_isLerping[1])
-            _isLerping[1] = false;
+        Vector2 __dif = __mousePos - __aimScreen;
 
-        if (normalizeZPosition)
+        
+        if (__mousePos.x > __aimScreen.x && aim.transform.localPosition.x < aimLimits.x)
         {
-            float __dist = transform.localPosition.z - distance.z;
-            if (__dist < 0)
-                __dist = -__dist;
-            ChangeToOriginalPosition("z", __dist);
+            aim.transform.localPosition += new Vector3(__dif.x, 0f, 0f);
         }
-        else if (_isLerping[2])
-            _isLerping[2] = false;
-
-
-    }
-
-    public void ChangePosition(string p_axis, float p_direction)
-    {
-        switch (p_axis)
+        else if (__mousePos.x < __aimScreen.x && aim.transform.localPosition.x > -aimLimits.x)
         {
-            case "z":
-                normalizeZPosition = false;
-                if ((transform.localPosition.z > distance.z - 7))
-                transform.localPosition += new Vector3(0f, 0f, -p_direction * _timeDT * cameraMovementSpeed);
-                break;
-            case "y":
-                normalizeYPosition = false;
-                if ((p_direction > 0f && transform.localPosition.y < 6f) || (p_direction < 0f && transform.localPosition.y > 0f))
-                    transform.localPosition += new Vector3(0f, p_direction * _timeDT * cameraMovementSpeed, 0f);
-                break;
-            case "x":
-                normalizeXPosition = false;
-                if ((p_direction > 0f && transform.localPosition.x < 4f) || (p_direction < 0f && transform.localPosition.x > -4f))
-                    transform.localPosition += new Vector3(p_direction * _timeDT * cameraMovementSpeed, 0f, 0f);
-                break;
+            aim.transform.localPosition += new Vector3(__dif.x, 0f, 0f);
         }
 
-    }
-
-    public bool NeedsNormalize(string p_axis)
-    {
-        switch (p_axis)
+        if (__mousePos.y > __aimScreen.y && aim.transform.localPosition.y < aimLimits.y)
         {
-            case "z":
-                if (transform.localPosition.z != distance.z)
-                    return true;
-                else
-                    return false;
-            case "y":
-                if (transform.localPosition.y != distance.y)
-                    return true;
-                else
-                    return false;
-            case "x":
-                if (transform.localPosition.x != distance.x)
-                    return true;
-                else
-                    return false;
-            default:
-                return false;
+            aim.transform.localPosition += new Vector3(0f, __dif.y, 0f);
         }
-    }
-
-    public void ChangeToOriginalPosition(string p_axis, float p_dist)
-    {
-        switch (p_axis)
+        else if (__mousePos.y < __aimScreen.y && aim.transform.localPosition.y > -aimLimits.y)
         {
-            case "z":
-                if (NeedsNormalize("z"))
-                {
-                    float __percent = LerpPercent("z", p_dist);
-                    transform.localPosition = Vector3.Lerp(new Vector3(transform.localPosition.x, transform.localPosition.y, _lerpStartPosition.z), new Vector3(transform.localPosition.x, transform.localPosition.y, distance.z), __percent);
-                }
-                else
-                    normalizeZPosition = false;
-                break;
-            case "y":
-                if (NeedsNormalize("y"))
-                {
-                    float __percent = LerpPercent("y", p_dist);
-                    transform.localPosition = Vector3.Lerp(new Vector3(transform.localPosition.x, _lerpStartPosition.y, transform.localPosition.z), new Vector3(transform.localPosition.x, distance.y, transform.localPosition.z), __percent);
-                }
-                else
-                    normalizeYPosition = false;
-                break;
-            case "x":
-                if (NeedsNormalize("x"))
-                {
-                    float __percent = LerpPercent("x", p_dist);
-                    transform.localPosition = Vector3.Lerp(new Vector3(_lerpStartPosition.x, transform.localPosition.y, transform.localPosition.z), new Vector3(distance.x, transform.localPosition.y, transform.localPosition.z), __percent);
-                }
-                else
-                    normalizeXPosition = false;
-                break;
-        }   
+            aim.transform.localPosition += new Vector3(0f, __dif.y, 0f);
+        }
 
-    }
 
-    private float LerpPercent(string p_axis, float p_dist)
-    {
-        switch (p_axis)
+        Vector2 __camDif = __aimScreen - _mouseOrigin;
+
+        if (__camDif.y > 0 && (transform.localRotation.eulerAngles.x >= _camLimitsRotationMin.x || transform.localRotation.eulerAngles.x < _camLimitsRotationMax.x + 1))
         {
-            case "z":
-                if (!_isLerping[2])
-                {
-                    _timeTakenDuringLerp[2] = p_dist * 0.12f;
-                    _isLerping[2] = true;
-                    _timeStartedLerping[2] = Time.time;
-                    _lerpStartPosition.z = transform.localPosition.z;
-                }
-                float __timeSinceStartedZ = Time.time - _timeStartedLerping[2];
-                float __percentageCompleteZ = __timeSinceStartedZ / _timeTakenDuringLerp[2];
-                if (__percentageCompleteZ >= 1.0f)
-                {
-                    _isLerping[2] = false;
-                    _lerpStartPosition.z = 0f;
-                }
-                return __percentageCompleteZ;
-            case "y":
-                if (!_isLerping[1])
-                {
-                    _timeTakenDuringLerp[1] = p_dist * 0.5f;
-                    _isLerping[1] = true;
-                    _timeStartedLerping[1] = Time.time;
-                    _lerpStartPosition.y = transform.localPosition.y;
-                }
-                float __timeSinceStartedY = Time.time - _timeStartedLerping[1];
-                float __percentageCompleteY = __timeSinceStartedY / _timeTakenDuringLerp[1];
-                if (__percentageCompleteY >= 1.0f)
-                {
-                    _isLerping[1] = false;
-                    _lerpStartPosition.y = 0f;
-                }
-                return __percentageCompleteY;
-            case "x":
-                if (!_isLerping[0])
-                {
-                    _timeTakenDuringLerp[0] = p_dist*0.7f;
-                    _isLerping[0] = true;
-                    _timeStartedLerping[0] = Time.time;
-                    _lerpStartPosition.x = transform.localPosition.x;
-                }
-                float __timeSinceStartedX = Time.time - _timeStartedLerping[0];
-                float __percentageCompleteX = __timeSinceStartedX / _timeTakenDuringLerp[0];
-                if (__percentageCompleteX >= 1.0f)
-                {
-                    _isLerping[0] = false;
-                    _lerpStartPosition.x = 0f;
-                }
-                return __percentageCompleteX;
-            default:
-                return 0f;
+            Quaternion __rot = transform.localRotation;
+            if (__rot.eulerAngles.x - __camDif.y < _camLimitsRotationMin.x && __rot.eulerAngles.x >= _camLimitsRotationMin.x)
+                __rot.eulerAngles = new Vector3(_camLimitsRotationMin.x, __rot.eulerAngles.y, _roll);
+            else
+                __rot.eulerAngles = new Vector3(__rot.eulerAngles.x -__camDif.y, __rot.eulerAngles.y, _roll);
+            transform.localRotation = __rot;
+            
+        }
+        else if (__camDif.y < 0 && (transform.localRotation.eulerAngles.x <= _camLimitsRotationMax.x || transform.localRotation.eulerAngles.x >= _camLimitsRotationMin.x))
+        {
+            Quaternion __rot = transform.localRotation;
+            if (__rot.eulerAngles.x - __camDif.y > _camLimitsRotationMax.x && __rot.eulerAngles.x >= 0 && __rot.eulerAngles.x < _camLimitsRotationMax.x)
+                __rot.eulerAngles = new Vector3(_camLimitsRotationMax.x, __rot.eulerAngles.y, _roll);
+            else
+                __rot.eulerAngles = new Vector3(__rot.eulerAngles.x - __camDif.y, __rot.eulerAngles.y, _roll);
+            transform.localRotation = __rot;
+        }
+
+        if (__camDif.x > 0 && (transform.localRotation.eulerAngles.y < _camLimitsRotationMax.y || transform.localRotation.eulerAngles.y >= _camLimitsRotationMin.y))
+        {
+            Quaternion __rot = transform.localRotation;
+            if (__rot.eulerAngles.y + __camDif.x >=  _camLimitsRotationMax.y && __rot.eulerAngles.y < _camLimitsRotationMax.y)
+                __rot.eulerAngles = new Vector3(__rot.eulerAngles.x, _camLimitsRotationMax.y, _roll);
+            else
+                __rot.eulerAngles = new Vector3(__rot.eulerAngles.x, __rot.eulerAngles.y + __camDif.x, _roll);
+            transform.localRotation = __rot;
+        }
+        else if (__camDif.x < 0 && (transform.localRotation.eulerAngles.y > _camLimitsRotationMin.y || transform.localRotation.eulerAngles.y <= _camLimitsRotationMax.y + 1))
+        {
+            Quaternion __rot = transform.localRotation;
+            if (__rot.eulerAngles.y + __camDif.x <= _camLimitsRotationMin.y && __rot.eulerAngles.y > _camLimitsRotationMax.y + 1)
+                __rot.eulerAngles = new Vector3(__rot.eulerAngles.x, _camLimitsRotationMin.y, _roll);
+            else
+                __rot.eulerAngles = new Vector3(__rot.eulerAngles.x, __rot.eulerAngles.y + __camDif.x, _roll);
+            transform.localRotation = __rot;
         }
         
+        // avoid z rotation
+        
+       /* Quaternion __rotLocal = transform.localRotation;
+        __rotLocal.eulerAngles = new Vector3(__rotWorld.eulerAngles.x, __rotWorld.eulerAngles.y, -__rotWorld.z);
+        transform.localRotation = __rotLocal;*/
+
     }
+
+    public Ray AimPosition()
+    {
+        Vector2 __aimScreen = _camera.WorldToViewportPoint(aim.transform.position);
+        Ray __worldPosition = _camera.ViewportPointToRay(new Vector3(__aimScreen.x, __aimScreen.y, 0f));
+        return __worldPosition;
+    }
+    
 }

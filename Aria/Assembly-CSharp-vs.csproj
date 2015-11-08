@@ -52,6 +52,8 @@
      <Compile Include="Assets\Script\Game\Aircraft03.cs" />
      <Compile Include="Assets\Script\Game\AircraftCollisionManager.cs" />
      <Compile Include="Assets\Script\Game\AnimationController.cs" />
+     <Compile Include="Assets\Script\Game\Camera_External.cs" />
+     <Compile Include="Assets\Script\Game\Camera_Internal.cs" />
      <Compile Include="Assets\Script\Game\Flight.cs" />
      <Compile Include="Assets\Script\Game\GuiManager.cs" />
      <Compile Include="Assets\Script\Game\SoundController.cs" />
