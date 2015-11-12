@@ -23,6 +23,15 @@ public class Bullet : MonoBehaviour {
     {
         _rigidbody = GetComponent<Rigidbody>();
         _gameObject = gameObject;
-        Destroy(_gameObject, 2f);
+        gameObject.SetActive(true);
+        Invoke("Disable", 2f);
+    }
+
+    public void Disable()
+    {
+        gameObject.SetActive(false);
+        _isActive = false;
+        _rigidbody.velocity = Vector3.zero;
+        transform.position = new Vector3(-1000, -1000, -1000);
     }
 }

@@ -15,16 +15,16 @@ public class Tower : MonoBehaviour {
         _renderer = transform.GetChild(0).GetComponent<Renderer>();
     }
 
-    public void Damage(float p_damage, float p_time, GameObject p_bullet)
+    public void Damage(float p_damage, float p_time, Bullet p_bullet)
     {
         StartCoroutine(ApplyDamage(p_time, p_damage, p_bullet));
     }
 
-    IEnumerator ApplyDamage(float p_time, float p_damage, GameObject p_bullet)
+    IEnumerator ApplyDamage(float p_time, float p_damage, Bullet p_bullet)
     {
         yield return new WaitForSeconds(p_time);
         if (p_bullet != null)
-            Destroy(p_bullet);
+            p_bullet.Disable();
         hp -= p_damage;
         _renderer.material.color += new Color(0.5f, 0f, 0f);
         if (hp <= 0)

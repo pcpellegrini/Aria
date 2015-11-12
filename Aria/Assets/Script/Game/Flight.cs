@@ -116,7 +116,7 @@ public class Flight : MonoBehaviour
     private Vector3 _AddPos;
     
 
-    void Start()
+    public void ManualStart()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.centerOfMass = centerOfMass.position;
@@ -126,7 +126,7 @@ public class Flight : MonoBehaviour
         
     }
 
-    void FixedUpdate()
+    public void ManualFixedUpdate()
     {
         _timeDT = Time.deltaTime;
 

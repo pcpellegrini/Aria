@@ -20,15 +20,28 @@ public class Manager : MonoBehaviour {
     private GameObject _currentPLayer;
     private AudioSource _audioSource;
 
-    private List<GameObject> _bullets = new List<GameObject>();
-    
-	void Start () {
+    private List<Bullet> _bullets = new List<Bullet>();
+    List<GameObject> _bulletsGO = new List<GameObject>();
+
+    void Start () {
         UnityEngine.Cursor.visible = false;
         _gameInfo = GameObject.Find("_info").GetComponent<Info>();
         _audioSource = GetComponent<AudioSource>();
         _currentPLayer = Instantiate(aircrafts[(int)_gameInfo.selectedAircraft], startPosition.position, Quaternion.identity) as GameObject;
         _currentPLayerCS = _currentPLayer.GetComponent<AirCraft>();
-        _currentPLayerCS.ManualStart(bulletPrefab, InstPanel, guiManager, aimHUD, _audioSource, levelMusic);
+        
+        for (int i = 0; i< 50; i++)
+        {
+            _bulletsGO.Add(Instantiate(bulletPrefab, new Vector3(-1000, -1000, -1000), Quaternion.identity) as GameObject);
+        }
+        for (int i = 0; i < _bulletsGO.Count; i++)
+        {
+            int __num = i;
+            _bullets.Add(_bulletsGO[__num].GetComponent<Bullet>());
+            _bullets[__num].gameObject.transform.parent = bulletsParent.transform;
+            _bullets[__num].isActive = false;
+        }
+        _currentPLayerCS.ManualStart(_bullets, InstPanel, guiManager, aimHUD, _audioSource, levelMusic);
 	}
     void Update()
     {

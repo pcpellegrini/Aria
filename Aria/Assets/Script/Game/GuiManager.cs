@@ -6,6 +6,7 @@ public class GuiManager : MonoBehaviour {
 
     public Slider energySlider;
     public Slider heatSlider;
+    public Slider armorSlider;
     public Text specialAmmo;
     public Button menuBtn;
 
@@ -22,12 +23,15 @@ public class GuiManager : MonoBehaviour {
             case "special":
                 specialAmmo.text = p_value.ToString();
                 break;
+            case "armor":
+                armorSlider.value = p_value;
+                break;
         }
         menuBtn.onClick.AddListener(delegate
         {
-            Time.timeScale = 1f;
-            UnityEngine.Cursor.visible = true;
-            Application.LoadLevel("Menu");
+            Debug.Log("ok");
+            Time.timeScale = 1;
+            Application.LoadLevel(0);
         });
     }
 }

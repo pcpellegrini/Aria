@@ -1,0 +1,1398 @@
+fileFormatVersion: 2
+guid: 4cc0c1f13e5974749935fba42062eb16
+timeCreated: 1447194256
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Bone073
+    100002: Bone074
+    100004: Bone075
+    100006: Bone076
+    100008: Bone077
+    100010: Bone078
+    100012: Bone079
+    100014: Bone080
+    100016: Bone081
+    100018: Bone082
+    100020: Bone083
+    100022: Bone084
+    100024: Bone085
+    100026: Bone086
+    100028: Bone087
+    100030: Bone088
+    100032: Bone089
+    100034: Bone090
+    100036: Bone091
+    100038: Bone092
+    100040: Bone093
+    100042: Bone094
+    100044: Bone095
+    100046: Bone096
+    100048: Bone097
+    100050: Bone098
+    100052: Bone099
+    100054: Bone100
+    100056: Bone101
+    100058: Bone102
+    100060: Bone103
+    100062: Bone104
+    100064: Bone105
+    100066: Bone106
+    100068: Bone107
+    100070: Bone108
+    100072: Bone109
+    100074: Bone110
+    100076: Bone111
+    100078: Bone112
+    100080: Bone113
+    100082: Bone114
+    100084: Bone115
+    100086: Bone116
+    100088: Bone117
+    100090: Bone118
+    100092: Bone119
+    100094: Bone120
+    100096: Bone121
+    100098: Bone122
+    100100: Bone123
+    100102: Bone124
+    100104: Bone125
+    100106: Bone126
+    100108: Bone127
+    100110: Bone128
+    100112: Bone129
+    100114: Box008
+    100116: IK Chain001
+    100118: IK Chain002
+    100120: IK Chain003
+    100122: IK Chain004
+    100124: IK Chain005
+    100126: IK Chain006
+    100128: IK Chain007
+    100130: IK Chain008
+    100132: //RootNode
+    100134: ponta017
+    100136: ponta018
+    100138: ponta019
+    100140: ponta020
+    100142: ponta021
+    100144: ponta022
+    100146: ponta023
+    100148: ponta024
+    100150: ponta025
+    100152: ponta026
+    100154: ponta027
+    100156: ponta028
+    100158: ponta029
+    100160: ponta030
+    100162: ponta031
+    100164: ponta032
+    400000: Bone073
+    400002: Bone074
+    400004: Bone075
+    400006: Bone076
+    400008: Bone077
+    400010: Bone078
+    400012: Bone079
+    400014: Bone080
+    400016: Bone081
+    400018: Bone082
+    400020: Bone083
+    400022: Bone084
+    400024: Bone085
+    400026: Bone086
+    400028: Bone087
+    400030: Bone088
+    400032: Bone089
+    400034: Bone090
+    400036: Bone091
+    400038: Bone092
+    400040: Bone093
+    400042: Bone094
+    400044: Bone095
+    400046: Bone096
+    400048: Bone097
+    400050: Bone098
+    400052: Bone099
+    400054: Bone100
+    400056: Bone101
+    400058: Bone102
+    400060: Bone103
+    400062: Bone104
+    400064: Bone105
+    400066: Bone106
+    400068: Bone107
+    400070: Bone108
+    400072: Bone109
+    400074: Bone110
+    400076: Bone111
+    400078: Bone112
+    400080: Bone113
+    400082: Bone114
+    400084: Bone115
+    400086: Bone116
+    400088: Bone117
+    400090: Bone118
+    400092: Bone119
+    400094: Bone120
+    400096: Bone121
+    400098: Bone122
+    400100: Bone123
+    400102: Bone124
+    400104: Bone125
+    400106: Bone126
+    400108: Bone127
+    400110: Bone128
+    400112: Bone129
+    400114: Box008
+    400116: IK Chain001
+    400118: IK Chain002
+    400120: IK Chain003
+    400122: IK Chain004
+    400124: IK Chain005
+    400126: IK Chain006
+    400128: IK Chain007
+    400130: IK Chain008
+    400132: //RootNode
+    400134: ponta017
+    400136: ponta018
+    400138: ponta019
+    400140: ponta020
+    400142: ponta021
+    400144: ponta022
+    400146: ponta023
+    400148: ponta024
+    400150: ponta025
+    400152: ponta026
+    400154: ponta027
+    400156: ponta028
+    400158: ponta029
+    400160: ponta030
+    400162: ponta031
+    400164: ponta032
+    4300000: Box008
+    7400000: Monster_Desert_Walk
+    7400002: Monster_Desert_Spit
+    7400004: Monster_Desert_Idle
+    7400006: Monster_Desert_Roar
+    7400008: Monster_Desert_Tail
+    7400010: Monster_Desert_Death
+    9500000: //RootNode
+    13700000: Box008
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Monster_Desert_Walk
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 340
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone073
+        weight: 1
+      - path: Bone073/Bone074
+        weight: 1
+      - path: Bone073/Bone074/Bone075
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077/ponta017
+        weight: 1
+      - path: Bone073/Bone078
+        weight: 1
+      - path: Bone073/Bone078/Bone079
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081/ponta018
+        weight: 1
+      - path: Bone073/Bone082
+        weight: 1
+      - path: Bone073/Bone082/Bone083
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084/ponta019
+        weight: 1
+      - path: Bone073/Bone085
+        weight: 1
+      - path: Bone073/Bone085/Bone086
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088/ponta020
+        weight: 1
+      - path: Bone073/Bone089
+        weight: 1
+      - path: Bone073/Bone089/Bone090
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092/ponta021
+        weight: 1
+      - path: Bone073/Bone093
+        weight: 1
+      - path: Bone073/Bone093/Bone094
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095/ponta022
+        weight: 1
+      - path: Bone073/Bone096
+        weight: 1
+      - path: Bone073/Bone096/Bone097
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098/ponta023
+        weight: 1
+      - path: Bone073/Bone099
+        weight: 1
+      - path: Bone073/Bone099/Bone100
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101/ponta024
+        weight: 1
+      - path: Bone073/Bone102
+        weight: 1
+      - path: Bone073/Bone102/Bone103
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104/ponta025
+        weight: 1
+      - path: Bone073/Bone105
+        weight: 1
+      - path: Bone073/Bone105/Bone106
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107/ponta026
+        weight: 1
+      - path: Bone073/Bone108
+        weight: 1
+      - path: Bone073/Bone108/Bone109
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115/ponta027
+        weight: 1
+      - path: Bone073/Bone108/Bone116
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119/ponta028
+        weight: 1
+      - path: Bone073/Bone108/Bone120
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123/ponta029
+        weight: 1
+      - path: Bone073/Bone129
+        weight: 1
+      - path: Bone073/Bone129/ponta032
+        weight: 1
+      - path: Bone124
+        weight: 1
+      - path: Bone124/Bone125
+        weight: 1
+      - path: Bone124/Bone125/Bone126
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128/ponta031
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/ponta030
+        weight: 1
+      - path: Box008
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: IK Chain005
+        weight: 1
+      - path: IK Chain006
+        weight: 1
+      - path: IK Chain007
+        weight: 1
+      - path: IK Chain008
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Monster_Desert_Spit
+      takeName: Take 001
+      firstFrame: 360
+      lastFrame: 505
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone073
+        weight: 1
+      - path: Bone073/Bone074
+        weight: 1
+      - path: Bone073/Bone074/Bone075
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077/ponta017
+        weight: 1
+      - path: Bone073/Bone078
+        weight: 1
+      - path: Bone073/Bone078/Bone079
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081/ponta018
+        weight: 1
+      - path: Bone073/Bone082
+        weight: 1
+      - path: Bone073/Bone082/Bone083
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084/ponta019
+        weight: 1
+      - path: Bone073/Bone085
+        weight: 1
+      - path: Bone073/Bone085/Bone086
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088/ponta020
+        weight: 1
+      - path: Bone073/Bone089
+        weight: 1
+      - path: Bone073/Bone089/Bone090
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092/ponta021
+        weight: 1
+      - path: Bone073/Bone093
+        weight: 1
+      - path: Bone073/Bone093/Bone094
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095/ponta022
+        weight: 1
+      - path: Bone073/Bone096
+        weight: 1
+      - path: Bone073/Bone096/Bone097
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098/ponta023
+        weight: 1
+      - path: Bone073/Bone099
+        weight: 1
+      - path: Bone073/Bone099/Bone100
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101/ponta024
+        weight: 1
+      - path: Bone073/Bone102
+        weight: 1
+      - path: Bone073/Bone102/Bone103
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104/ponta025
+        weight: 1
+      - path: Bone073/Bone105
+        weight: 1
+      - path: Bone073/Bone105/Bone106
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107/ponta026
+        weight: 1
+      - path: Bone073/Bone108
+        weight: 1
+      - path: Bone073/Bone108/Bone109
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115/ponta027
+        weight: 1
+      - path: Bone073/Bone108/Bone116
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119/ponta028
+        weight: 1
+      - path: Bone073/Bone108/Bone120
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123/ponta029
+        weight: 1
+      - path: Bone073/Bone129
+        weight: 1
+      - path: Bone073/Bone129/ponta032
+        weight: 1
+      - path: Bone124
+        weight: 1
+      - path: Bone124/Bone125
+        weight: 1
+      - path: Bone124/Bone125/Bone126
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128/ponta031
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/ponta030
+        weight: 1
+      - path: Box008
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: IK Chain005
+        weight: 1
+      - path: IK Chain006
+        weight: 1
+      - path: IK Chain007
+        weight: 1
+      - path: IK Chain008
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Monster_Desert_Idle
+      takeName: Take 001
+      firstFrame: 520
+      lastFrame: 700
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone073
+        weight: 1
+      - path: Bone073/Bone074
+        weight: 1
+      - path: Bone073/Bone074/Bone075
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077/ponta017
+        weight: 1
+      - path: Bone073/Bone078
+        weight: 1
+      - path: Bone073/Bone078/Bone079
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081/ponta018
+        weight: 1
+      - path: Bone073/Bone082
+        weight: 1
+      - path: Bone073/Bone082/Bone083
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084/ponta019
+        weight: 1
+      - path: Bone073/Bone085
+        weight: 1
+      - path: Bone073/Bone085/Bone086
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088/ponta020
+        weight: 1
+      - path: Bone073/Bone089
+        weight: 1
+      - path: Bone073/Bone089/Bone090
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092/ponta021
+        weight: 1
+      - path: Bone073/Bone093
+        weight: 1
+      - path: Bone073/Bone093/Bone094
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095/ponta022
+        weight: 1
+      - path: Bone073/Bone096
+        weight: 1
+      - path: Bone073/Bone096/Bone097
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098/ponta023
+        weight: 1
+      - path: Bone073/Bone099
+        weight: 1
+      - path: Bone073/Bone099/Bone100
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101/ponta024
+        weight: 1
+      - path: Bone073/Bone102
+        weight: 1
+      - path: Bone073/Bone102/Bone103
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104/ponta025
+        weight: 1
+      - path: Bone073/Bone105
+        weight: 1
+      - path: Bone073/Bone105/Bone106
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107/ponta026
+        weight: 1
+      - path: Bone073/Bone108
+        weight: 1
+      - path: Bone073/Bone108/Bone109
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115/ponta027
+        weight: 1
+      - path: Bone073/Bone108/Bone116
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119/ponta028
+        weight: 1
+      - path: Bone073/Bone108/Bone120
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123/ponta029
+        weight: 1
+      - path: Bone073/Bone129
+        weight: 1
+      - path: Bone073/Bone129/ponta032
+        weight: 1
+      - path: Bone124
+        weight: 1
+      - path: Bone124/Bone125
+        weight: 1
+      - path: Bone124/Bone125/Bone126
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128/ponta031
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/ponta030
+        weight: 1
+      - path: Box008
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: IK Chain005
+        weight: 1
+      - path: IK Chain006
+        weight: 1
+      - path: IK Chain007
+        weight: 1
+      - path: IK Chain008
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Monster_Desert_Tail
+      takeName: Take 001
+      firstFrame: 720
+      lastFrame: 1127
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone073
+        weight: 1
+      - path: Bone073/Bone074
+        weight: 1
+      - path: Bone073/Bone074/Bone075
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077/ponta017
+        weight: 1
+      - path: Bone073/Bone078
+        weight: 1
+      - path: Bone073/Bone078/Bone079
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081/ponta018
+        weight: 1
+      - path: Bone073/Bone082
+        weight: 1
+      - path: Bone073/Bone082/Bone083
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084/ponta019
+        weight: 1
+      - path: Bone073/Bone085
+        weight: 1
+      - path: Bone073/Bone085/Bone086
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088/ponta020
+        weight: 1
+      - path: Bone073/Bone089
+        weight: 1
+      - path: Bone073/Bone089/Bone090
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092/ponta021
+        weight: 1
+      - path: Bone073/Bone093
+        weight: 1
+      - path: Bone073/Bone093/Bone094
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095/ponta022
+        weight: 1
+      - path: Bone073/Bone096
+        weight: 1
+      - path: Bone073/Bone096/Bone097
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098/ponta023
+        weight: 1
+      - path: Bone073/Bone099
+        weight: 1
+      - path: Bone073/Bone099/Bone100
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101/ponta024
+        weight: 1
+      - path: Bone073/Bone102
+        weight: 1
+      - path: Bone073/Bone102/Bone103
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104/ponta025
+        weight: 1
+      - path: Bone073/Bone105
+        weight: 1
+      - path: Bone073/Bone105/Bone106
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107/ponta026
+        weight: 1
+      - path: Bone073/Bone108
+        weight: 1
+      - path: Bone073/Bone108/Bone109
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115/ponta027
+        weight: 1
+      - path: Bone073/Bone108/Bone116
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119/ponta028
+        weight: 1
+      - path: Bone073/Bone108/Bone120
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123/ponta029
+        weight: 1
+      - path: Bone073/Bone129
+        weight: 1
+      - path: Bone073/Bone129/ponta032
+        weight: 1
+      - path: Bone124
+        weight: 1
+      - path: Bone124/Bone125
+        weight: 1
+      - path: Bone124/Bone125/Bone126
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128/ponta031
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/ponta030
+        weight: 1
+      - path: Box008
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: IK Chain005
+        weight: 1
+      - path: IK Chain006
+        weight: 1
+      - path: IK Chain007
+        weight: 1
+      - path: IK Chain008
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Monster_Desert_Roar
+      takeName: Take 001
+      firstFrame: 1140
+      lastFrame: 1390
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone073
+        weight: 1
+      - path: Bone073/Bone074
+        weight: 1
+      - path: Bone073/Bone074/Bone075
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077/ponta017
+        weight: 1
+      - path: Bone073/Bone078
+        weight: 1
+      - path: Bone073/Bone078/Bone079
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081/ponta018
+        weight: 1
+      - path: Bone073/Bone082
+        weight: 1
+      - path: Bone073/Bone082/Bone083
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084/ponta019
+        weight: 1
+      - path: Bone073/Bone085
+        weight: 1
+      - path: Bone073/Bone085/Bone086
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088/ponta020
+        weight: 1
+      - path: Bone073/Bone089
+        weight: 1
+      - path: Bone073/Bone089/Bone090
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092/ponta021
+        weight: 1
+      - path: Bone073/Bone093
+        weight: 1
+      - path: Bone073/Bone093/Bone094
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095/ponta022
+        weight: 1
+      - path: Bone073/Bone096
+        weight: 1
+      - path: Bone073/Bone096/Bone097
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098/ponta023
+        weight: 1
+      - path: Bone073/Bone099
+        weight: 1
+      - path: Bone073/Bone099/Bone100
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101/ponta024
+        weight: 1
+      - path: Bone073/Bone102
+        weight: 1
+      - path: Bone073/Bone102/Bone103
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104/ponta025
+        weight: 1
+      - path: Bone073/Bone105
+        weight: 1
+      - path: Bone073/Bone105/Bone106
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107/ponta026
+        weight: 1
+      - path: Bone073/Bone108
+        weight: 1
+      - path: Bone073/Bone108/Bone109
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115/ponta027
+        weight: 1
+      - path: Bone073/Bone108/Bone116
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119/ponta028
+        weight: 1
+      - path: Bone073/Bone108/Bone120
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123/ponta029
+        weight: 1
+      - path: Bone073/Bone129
+        weight: 1
+      - path: Bone073/Bone129/ponta032
+        weight: 1
+      - path: Bone124
+        weight: 1
+      - path: Bone124/Bone125
+        weight: 1
+      - path: Bone124/Bone125/Bone126
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128/ponta031
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/ponta030
+        weight: 1
+      - path: Box008
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: IK Chain005
+        weight: 1
+      - path: IK Chain006
+        weight: 1
+      - path: IK Chain007
+        weight: 1
+      - path: IK Chain008
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Monster_Desert_Death
+      takeName: Take 001
+      firstFrame: 1410
+      lastFrame: 1585
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone073
+        weight: 1
+      - path: Bone073/Bone074
+        weight: 1
+      - path: Bone073/Bone074/Bone075
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077
+        weight: 1
+      - path: Bone073/Bone074/Bone075/Bone076/Bone077/ponta017
+        weight: 1
+      - path: Bone073/Bone078
+        weight: 1
+      - path: Bone073/Bone078/Bone079
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081
+        weight: 1
+      - path: Bone073/Bone078/Bone079/Bone080/Bone081/ponta018
+        weight: 1
+      - path: Bone073/Bone082
+        weight: 1
+      - path: Bone073/Bone082/Bone083
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084
+        weight: 1
+      - path: Bone073/Bone082/Bone083/Bone084/ponta019
+        weight: 1
+      - path: Bone073/Bone085
+        weight: 1
+      - path: Bone073/Bone085/Bone086
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088
+        weight: 1
+      - path: Bone073/Bone085/Bone086/Bone087/Bone088/ponta020
+        weight: 1
+      - path: Bone073/Bone089
+        weight: 1
+      - path: Bone073/Bone089/Bone090
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092
+        weight: 1
+      - path: Bone073/Bone089/Bone090/Bone091/Bone092/ponta021
+        weight: 1
+      - path: Bone073/Bone093
+        weight: 1
+      - path: Bone073/Bone093/Bone094
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095
+        weight: 1
+      - path: Bone073/Bone093/Bone094/Bone095/ponta022
+        weight: 1
+      - path: Bone073/Bone096
+        weight: 1
+      - path: Bone073/Bone096/Bone097
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098
+        weight: 1
+      - path: Bone073/Bone096/Bone097/Bone098/ponta023
+        weight: 1
+      - path: Bone073/Bone099
+        weight: 1
+      - path: Bone073/Bone099/Bone100
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101
+        weight: 1
+      - path: Bone073/Bone099/Bone100/Bone101/ponta024
+        weight: 1
+      - path: Bone073/Bone102
+        weight: 1
+      - path: Bone073/Bone102/Bone103
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104
+        weight: 1
+      - path: Bone073/Bone102/Bone103/Bone104/ponta025
+        weight: 1
+      - path: Bone073/Bone105
+        weight: 1
+      - path: Bone073/Bone105/Bone106
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107
+        weight: 1
+      - path: Bone073/Bone105/Bone106/Bone107/ponta026
+        weight: 1
+      - path: Bone073/Bone108
+        weight: 1
+      - path: Bone073/Bone108/Bone109
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115
+        weight: 1
+      - path: Bone073/Bone108/Bone109/Bone110/Bone111/Bone112/Bone113/Bone114/Bone115/ponta027
+        weight: 1
+      - path: Bone073/Bone108/Bone116
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119
+        weight: 1
+      - path: Bone073/Bone108/Bone116/Bone117/Bone118/Bone119/ponta028
+        weight: 1
+      - path: Bone073/Bone108/Bone120
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123
+        weight: 1
+      - path: Bone073/Bone108/Bone120/Bone121/Bone122/Bone123/ponta029
+        weight: 1
+      - path: Bone073/Bone129
+        weight: 1
+      - path: Bone073/Bone129/ponta032
+        weight: 1
+      - path: Bone124
+        weight: 1
+      - path: Bone124/Bone125
+        weight: 1
+      - path: Bone124/Bone125/Bone126
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/Bone128/ponta031
+        weight: 1
+      - path: Bone124/Bone125/Bone126/Bone127/ponta030
+        weight: 1
+      - path: Box008
+        weight: 1
+      - path: IK Chain001
+        weight: 1
+      - path: IK Chain002
+        weight: 1
+      - path: IK Chain003
+        weight: 1
+      - path: IK Chain004
+        weight: 1
+      - path: IK Chain005
+        weight: 1
+      - path: IK Chain006
+        weight: 1
+      - path: IK Chain007
+        weight: 1
+      - path: IK Chain008
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

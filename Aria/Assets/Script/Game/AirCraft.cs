@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AirCraft : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class AirCraft : MonoBehaviour {
 
     public type currentType;
     public float energy = 100f;
+    public float armorEnergy = 10f;
     public float specialWeaponDamage = 100f;
     public float specialWeaponSpeed = 0.08f;
     public int specialWeaponAmmo = 3;
@@ -58,7 +60,7 @@ public class AirCraft : MonoBehaviour {
     protected CameraContoller _currentCameraController;
     protected AircraftCollisionManager _collisionManager;
     protected Flight _flightController;
-    protected GameObject _specialBullet;
+    protected List<Bullet> _bullets = new List<Bullet>();
     protected GameObject _instPanel;
     protected GuiManager _guiManager;
     protected GameObject _aimHUD;
@@ -66,7 +68,7 @@ public class AirCraft : MonoBehaviour {
     protected Rigidbody _rigidbody;
     protected Animator _anim;
 
-    public virtual void ManualStart (GameObject p_bullet, GameObject p_panel, GuiManager p_gui, GameObject p_aim, AudioSource p_musicSource, AudioClip p_musicLevel) {
+    public virtual void ManualStart (List<Bullet> p_bullet, GameObject p_panel, GuiManager p_gui, GameObject p_aim, AudioSource p_musicSource, AudioClip p_musicLevel) {
 
         _rigidbody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
@@ -74,12 +76,13 @@ public class AirCraft : MonoBehaviour {
         _flightController = GetComponent<Flight>();
         _collisionManager = GetComponent<AircraftCollisionManager>();
 
+        _flightController.ManualStart();
         TPSCameraController.ManualStart(_rigidbody);
         FPSCameraController.ManualStart(_rigidbody);
         _currentCameraController = TPSCameraController;
 
         soundController.musicSound = p_musicSource;
-        _specialBullet = p_bullet;
+        _bullets = p_bullet;
         _instPanel = p_panel;
         _guiManager = p_gui;
         _aimHUD = p_aim;
@@ -133,12 +136,31 @@ public class AirCraft : MonoBehaviour {
 
         // Change camera
         soundController.InsideCockpit(false);
+        _inGame = true;
     }
 
     public virtual void DecreaseEnergy(float p_value)
     {
-        energy -= p_value;
-        _guiManager.ChangeValue("energy", energy);
+        if (armorEnergy > 0)
+        {
+            armorEnergy -= p_value;
+            _guiManager.ChangeValue("armor", armorEnergy);
+        }
+        else
+        {
+            energy -= p_value;
+            _guiManager.ChangeValue("energy", energy);
+        }
+        
+    }
+
+    public virtual void IncreaseEnergy(float p_value)
+    {
+        if (armorEnergy < 10)
+        {
+            armorEnergy += p_value;
+            _guiManager.ChangeValue("armor", armorEnergy);
+        }
     }
 
     public virtual void ManualFixedUpdate()
@@ -154,13 +176,16 @@ public class AirCraft : MonoBehaviour {
                 _normalGunLocked = false;
             }
         }
+        _flightController.ManualFixedUpdate();
+        _currentCameraController.ManualFixedUpdate();
         _speed = _flightController.currentSpeed;
+        
+            IncreaseEnergy(_timeDT);
     }
 
     public virtual void ManualUpdate()
     {
         InputControl();
-        _currentCameraController.ManualFixedUpdate();
     }
 
     public virtual void CancelAnim()
@@ -174,136 +199,21 @@ public class AirCraft : MonoBehaviour {
         float __accelerator = Input.GetAxis("Accelerate");
         float __breaker = Input.GetAxis("Break");
 
-        // Boost
-        if (__accelerator > 0f && !_flightController.accelerating)
-        {
-            ChangeSpeed("boost");
-            _flightController.acceleratorValue = 1f;
-            _flightController.accelerating = true;
-            soundController.PlaySound(SoundController.source.BOOST, boostSound);
-            for (int i = 0; i < lightEmission.Length; i++)
-            {
-                int __num = i;
-                lightEmission[__num].color = Color.blue;
-            }
-            for (int i = 0; i < fireEmission.Length; i++)
-            {
-                int __num = i;
-                fireEmission[__num].enableEmission = false;
-            }
-            for (int i = 0; i < fireEmissionBoost.Length; i++)
-            {
-                int __num = i;
-                fireEmissionBoost[__num].enableEmission = true;
-            }
-        }
-        else if (__accelerator == 0f && _flightController.accelerating)
-        {
-            ChangeSpeed("normal");
-            soundController.StopSound(SoundController.source.BOOST);
-            _flightController.accelerating = false;
-            _flightController.acceleratorValue = 0f;
-            for (int i = 0; i < lightEmission.Length; i++)
-            {
-                int __num = i;
-                lightEmission[__num].color = Color.yellow;
-            }
-            for (int i = 0; i < fireEmission.Length; i++)
-            {
-                int __num = i;
-                fireEmission[__num].enableEmission = true;
-            }
-            for (int i = 0; i < fireEmissionBoost.Length; i++)
-            {
-                int __num = i;
-                fireEmissionBoost[__num].enableEmission = false;
-            }
-        }
-
-        // Break
-        if (__breaker > 0f && !_flightController.breaking)
-        {
-            ChangeSpeed("break");                
-            for (int i = 0; i < fireEmission.Length; i++)
-            {
-                int __num = i;
-                fireEmission[__num].startSpeed = 0f;
-            }
-            for (int i = 0; i < lightEmission.Length; i++)
-            {
-                int __num = i;
-                lightEmission[__num].intensity = 0.5f;
-            }
-            _flightController.breakValue = 1;
-            _flightController.breaking = true;
-        }
-        else if (__breaker == 0f && _flightController.breaking)
-        {
-            ChangeSpeed("normal");
-            for (int i = 0; i < fireEmission.Length; i++)
-            {
-                int __num = i;
-                fireEmission[__num].startSpeed = _initialEmissionStartSpeed;
-            }
-            for (int i = 0; i < lightEmission.Length; i++)
-            {
-                int __num = i;
-                lightEmission[__num].intensity = _emissionLightNormalIntensity;
-            }
-            _flightController.breaking = false;
-            _flightController.breakValue = 0f;
-        }
-
-        _flightController.rotationDirection = Input.GetAxis("Horizontal");
-        _flightController.pitchDirection = Input.GetAxis("Vertical");
-
-        if (_flightController.rotationDirection != 0f && !_flightController.rotating)
-        {
-            _flightController.rotating = true;
-        }
-        else if (_flightController.rotating && _flightController.rotationDirection == 0f)
-        {
-            _flightController.rotating = false;
-        }
-
-        if (_currentCameraController.type == CameraContoller.cameraType.THIRD_PERSON_VSION)
-            _currentCameraController.roll = _flightController.roll;
-
-        if (_flightController.pitchDirection != 0f && !_flightController.pitching)
-        {
-            _flightController.pitching = true;
-        }
-        else if (_flightController.pitching && _flightController.pitchDirection == 0f)
-        {
-            _flightController.pitching = false;
-        }
-
-        // Joystick Aim
-        if (Input.GetAxis("MouseH") != 0 || Input.GetAxis("MouseV") != 0)
-        {
-            Vector2 __dir = new Vector2(Input.GetAxis("MouseH"), Input.GetAxis("MouseV"));
-            _currentCameraController.aimFollowMouse = false;
-            _currentCameraController._mousePos = __dir;
-        }
-        else
-        {
-            _currentCameraController._mousePos = new Vector2(0f, 0f);
-        }
-
         //Pause Game
         if (Input.GetButtonDown("Pause"))
         {
-            Debug.Log("ok");
             if (_inGame)
             {
+                UnityEngine.Cursor.visible = true;
                 soundController.PauseAll(true);
                 _flightController.inGame = false;
                 _inGame = false;
-                Time.timeScale = 0f;
+                Time.timeScale = 0;
                 _instPanel.SetActive(true);
             }
             else
             {
+                UnityEngine.Cursor.visible = false;
                 soundController.PauseAll(false);
                 if (!_normalGunFiring)
                     soundController.StopSound(SoundController.source.NORMAL_WEAPON);
@@ -314,120 +224,242 @@ public class AirCraft : MonoBehaviour {
             }
         }
 
-        // Cameras
-        if (Input.GetButtonDown("Camera"))
+        
+
+        // Joystick Aim
+        /* if (Input.GetAxis("MouseH") != 0 || Input.GetAxis("MouseV") != 0)
+         {
+             Vector2 __dir = new Vector2(Input.GetAxis("MouseH"), Input.GetAxis("MouseV"));
+             _currentCameraController.aimFollowMouse = false;
+             _currentCameraController._mousePos = __dir;
+         }
+         else
+         {
+             _currentCameraController._mousePos = new Vector2(0f, 0f);
+         }*/
+
+        
+        if (_inGame)
         {
-            if (_currentCameraController.type == CameraContoller.cameraType.FIRST_PERSON_VISION)
+            // Boost
+            if (__accelerator > 0f && !_flightController.accelerating)
             {
-                _currentCameraController = TPSCameraController;
-                TPSCameraController.mainCam.enabled = true;
-                FPSCameraController.mainCam.enabled = false;
-                soundController.InsideCockpit(false);
-                //EnableExternal(true);
+                ChangeSpeed("boost");
+                _flightController.acceleratorValue = 1f;
+                _flightController.accelerating = true;
+                soundController.PlaySound(SoundController.source.BOOST, boostSound);
+                for (int i = 0; i < lightEmission.Length; i++)
+                {
+                    int __num = i;
+                    lightEmission[__num].color = Color.blue;
+                }
+                for (int i = 0; i < fireEmission.Length; i++)
+                {
+                    int __num = i;
+                    fireEmission[__num].enableEmission = false;
+                }
+                for (int i = 0; i < fireEmissionBoost.Length; i++)
+                {
+                    int __num = i;
+                    fireEmissionBoost[__num].enableEmission = true;
+                }
             }
-            else
+            else if (__accelerator == 0f && _flightController.accelerating)
             {
-                _currentCameraController = FPSCameraController;
-                FPSCameraController.mainCam.enabled = true;
+                ChangeSpeed("normal");
+                soundController.StopSound(SoundController.source.BOOST);
+                _flightController.accelerating = false;
+                _flightController.acceleratorValue = 0f;
+                for (int i = 0; i < lightEmission.Length; i++)
+                {
+                    int __num = i;
+                    lightEmission[__num].color = Color.yellow;
+                }
+                for (int i = 0; i < fireEmission.Length; i++)
+                {
+                    int __num = i;
+                    fireEmission[__num].enableEmission = true;
+                }
+                for (int i = 0; i < fireEmissionBoost.Length; i++)
+                {
+                    int __num = i;
+                    fireEmissionBoost[__num].enableEmission = false;
+                }
+            }
+
+            // Break
+            if (__breaker > 0f && !_flightController.breaking)
+            {
+                ChangeSpeed("break");
+                for (int i = 0; i < fireEmission.Length; i++)
+                {
+                    int __num = i;
+                    fireEmission[__num].startSpeed = 0f;
+                }
+                for (int i = 0; i < lightEmission.Length; i++)
+                {
+                    int __num = i;
+                    lightEmission[__num].intensity = 0.5f;
+                }
+                _flightController.breakValue = 1;
+                _flightController.breaking = true;
+            }
+            else if (__breaker == 0f && _flightController.breaking)
+            {
+                ChangeSpeed("normal");
+                for (int i = 0; i < fireEmission.Length; i++)
+                {
+                    int __num = i;
+                    fireEmission[__num].startSpeed = _initialEmissionStartSpeed;
+                }
+                for (int i = 0; i < lightEmission.Length; i++)
+                {
+                    int __num = i;
+                    lightEmission[__num].intensity = _emissionLightNormalIntensity;
+                }
+                _flightController.breaking = false;
+                _flightController.breakValue = 0f;
+            }
+
+            _flightController.rotationDirection = Input.GetAxis("Horizontal");
+            _flightController.pitchDirection = Input.GetAxis("Vertical");
+
+            if (_flightController.rotationDirection != 0f && !_flightController.rotating)
+            {
+                _flightController.rotating = true;
+            }
+            else if (_flightController.rotating && _flightController.rotationDirection == 0f)
+            {
+                _flightController.rotating = false;
+            }
+
+            if (_currentCameraController.type == CameraContoller.cameraType.THIRD_PERSON_VSION)
+                _currentCameraController.roll = _flightController.roll;
+
+            if (_flightController.pitchDirection != 0f && !_flightController.pitching)
+            {
+                _flightController.pitching = true;
+            }
+            else if (_flightController.pitching && _flightController.pitchDirection == 0f)
+            {
+                _flightController.pitching = false;
+            }
+
+            // Cameras
+            if (Input.GetButtonDown("Camera"))
+            {
+                if (_currentCameraController.type == CameraContoller.cameraType.FIRST_PERSON_VISION)
+                {
+                    _currentCameraController = TPSCameraController;
+                    TPSCameraController.mainCam.enabled = true;
+                    FPSCameraController.mainCam.enabled = false;
+                    soundController.InsideCockpit(false);
+                    //EnableExternal(true);
+                }
+                else
+                {
+                    _currentCameraController = FPSCameraController;
+                    FPSCameraController.mainCam.enabled = true;
+                    TPSCameraController.mainCam.enabled = false;
+                    soundController.InsideCockpit(true);
+                    //EnableExternal(false);
+                }
+            }
+
+            // Camera Back
+            if (Input.GetButtonDown("Camera Back"))
+            {
+                cameraBack.enabled = true;
                 TPSCameraController.mainCam.enabled = false;
-                soundController.InsideCockpit(true);
-                //EnableExternal(false);
-            }
-        }
-
-        // Camera Back
-        if (Input.GetButtonDown("Camera Back"))
-        {
-            cameraBack.enabled = true;
-            TPSCameraController.mainCam.enabled = false;
-            FPSCameraController.mainCam.enabled = false;
-            _aimHUD.SetActive(false);
-        }
-        if (Input.GetButtonUp("Camera Back"))
-        {
-            cameraBack.enabled = false;
-            _aimHUD.SetActive(true);
-            if (_currentCameraController.type == CameraContoller.cameraType.FIRST_PERSON_VISION)
-            {
-                TPSCameraController.mainCam.enabled = false;
-                FPSCameraController.mainCam.enabled = true;
-            }
-            else
-            {
-                TPSCameraController.mainCam.enabled = true;
                 FPSCameraController.mainCam.enabled = false;
+                _aimHUD.SetActive(false);
             }
-
-        }
-
-        // Fire
-        if (Input.GetButtonDown("Fire2") && specialWeaponAmmo > 0)
-        {
-            specialWeaponAmmo--;
-            _guiManager.ChangeValue("special", specialWeaponAmmo);
-            Fire("special");
-            FireSound(true, "special");
-        }
-        if (Input.GetButtonDown("Fire1"))
-        {
-            _normalGunFiring = true;
-            if (!_normalGunLocked)
+            if (Input.GetButtonUp("Camera Back"))
             {
-                InvokeRepeating("NormalFireCaller", 0f, normalWeaponTime);
-                FireSound(true, "normal");
+                cameraBack.enabled = false;
+                _aimHUD.SetActive(true);
+                if (_currentCameraController.type == CameraContoller.cameraType.FIRST_PERSON_VISION)
+                {
+                    TPSCameraController.mainCam.enabled = false;
+                    FPSCameraController.mainCam.enabled = true;
+                }
+                else
+                {
+                    TPSCameraController.mainCam.enabled = true;
+                    FPSCameraController.mainCam.enabled = false;
+                }
+
             }
-        }
 
-        if (Input.GetButtonUp("Fire1"))
-        {
-            _normalGunFiring = false;
-            FireSound(false, "normal");
-            CancelInvoke("NormalFireCaller");
-            DisableAllFire();
-        }
-
-        // Joystick Firing Normal
-        if (Input.GetButtonDown("Fire1Joystick") && !_normalGunFiring)
-        {
-            _normalGunFiring = true;
-            if (!_normalGunLocked)
+            // Fire
+            if (Input.GetButtonDown("Fire2") && specialWeaponAmmo > 0)
             {
-                InvokeRepeating("NormalFireCaller", 0f, normalWeaponTime);
-                FireSound(true, "normal");
+                specialWeaponAmmo--;
+                _guiManager.ChangeValue("special", specialWeaponAmmo);
+                Fire("special");
+                FireSound(true, "special");
             }
-        }
-        if (Input.GetButtonUp("Fire1Joystick"))
-        {
-            _normalGunFiring = false;
-            FireSound(false, "normal");
-            CancelInvoke("NormalFireCaller");
-            DisableAllFire();
-        }
+            if (Input.GetButtonDown("Fire1"))
+            {
+                _normalGunFiring = true;
+                if (!_normalGunLocked)
+                {
+                    InvokeRepeating("NormalFireCaller", 0f, normalWeaponTime);
+                    FireSound(true, "normal");
+                }
+            }
 
-        // Fire Special
-        if (Input.GetButtonDown("Fire2Joystick") && !_specialGunFiring && specialWeaponAmmo > 0)
-        {
-            specialWeaponAmmo--;
-            _guiManager.ChangeValue("special", specialWeaponAmmo);
-            _specialGunFiring = true;
-            Fire("special");
-            FireSound(true, "special");
-        }
-        if (Input.GetButtonUp("Fire2Joystick"))
-        {
-            _specialGunFiring = false;
-        }
+            if (Input.GetButtonUp("Fire1"))
+            {
+                _normalGunFiring = false;
+                FireSound(false, "normal");
+                CancelInvoke("NormalFireCaller");
+                DisableAllFire();
+            }
 
-        // BarrelRoll
-        if (Input.GetButtonDown("Barrel Roll Left") && !_flightController.barrelRollActive)
-        {
-            _anim.SetTrigger(_animIDBarrelLeft);
-            _flightController.barrelRollActive = true;
-        }
-        if (Input.GetButtonDown("Barrel Roll Right") && !_flightController.barrelRollActive)
-        {
-            _anim.SetTrigger(_animIDBarrelRight);
-            _flightController.barrelRollActive = true;
+            // Joystick Firing Normal
+            if (Input.GetButtonDown("Fire1Joystick") && !_normalGunFiring)
+            {
+                _normalGunFiring = true;
+                if (!_normalGunLocked)
+                {
+                    InvokeRepeating("NormalFireCaller", 0f, normalWeaponTime);
+                    FireSound(true, "normal");
+                }
+            }
+            if (Input.GetButtonUp("Fire1Joystick"))
+            {
+                _normalGunFiring = false;
+                FireSound(false, "normal");
+                CancelInvoke("NormalFireCaller");
+                DisableAllFire();
+            }
+
+            // Fire Special
+            if (Input.GetButtonDown("Fire2Joystick") && !_specialGunFiring && specialWeaponAmmo > 0)
+            {
+                specialWeaponAmmo--;
+                _guiManager.ChangeValue("special", specialWeaponAmmo);
+                _specialGunFiring = true;
+                Fire("special");
+                FireSound(true, "special");
+            }
+            if (Input.GetButtonUp("Fire2Joystick"))
+            {
+                _specialGunFiring = false;
+            }
+
+            // BarrelRoll
+            if (Input.GetButtonDown("Barrel Roll Left") && !_flightController.barrelRollActive)
+            {
+                _anim.SetTrigger(_animIDBarrelLeft);
+                _flightController.barrelRollActive = true;
+            }
+            if (Input.GetButtonDown("Barrel Roll Right") && !_flightController.barrelRollActive)
+            {
+                _anim.SetTrigger(_animIDBarrelRight);
+                _flightController.barrelRollActive = true;
+            }
         }
     }
 
@@ -538,25 +570,42 @@ public class AirCraft : MonoBehaviour {
                 break;
             case "special":
                 Vector3 __dir = _currentCameraController.AimPosition().direction;
-                Debug.Log(__dir);
-                GameObject __tmpBullet = Instantiate(_specialBullet, fireExit.position, Quaternion.identity) as GameObject;
-                Bullet __bulletCreated = __tmpBullet.GetComponent<Bullet>();
-                __bulletCreated.ManualStart();
-                __bulletCreated.bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * __dir), ForceMode.Impulse);
-                FireAction(specialWeaponDamage, specialWeaponSpeed, __tmpBullet);
+                for (int i = 0; i< _bullets.Count; i++)
+                {
+                    int __num = i;
+                    if (!_bullets[__num].isActive)
+                    {
+                        _bullets[__num].isActive = false;
+                        _bullets[__num].transform.position = fireExit.position;
+                        _bullets[__num].transform.rotation = transform.rotation;
+                        _bullets[__num].transform.LookAt(__dir);
+                        _bullets[__num].ManualStart();
+                        _bullets[__num].bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * __dir), ForceMode.Impulse);
+                        FireAction(specialWeaponDamage, specialWeaponSpeed, _bullets[__num]);
+                    }
+                }
                 if (currentType != type.AIRCRAFT_1)
                 {
-                    GameObject __tmpBullet2 = Instantiate(_specialBullet, fireExitR.position, Quaternion.identity) as GameObject;
-                    Bullet __bulletCreated2 = __tmpBullet2.GetComponent<Bullet>();
-                    __bulletCreated2.ManualStart();
-                    __bulletCreated2.bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * _rigidbody.transform.forward), ForceMode.Impulse);
-                    FireAction(specialWeaponDamage, specialWeaponSpeed, __tmpBullet2);
+                    for (int i = 0; i < _bullets.Count; i++)
+                    {
+                        int __num = i;
+                        if (!_bullets[__num].isActive)
+                        {
+                            _bullets[__num].isActive = false;
+                            _bullets[__num].transform.position = fireExitR.position;
+                            _bullets[__num].transform.rotation = transform.rotation;
+                            _bullets[__num].transform.LookAt(__dir);
+                            _bullets[__num].ManualStart();
+                            _bullets[__num].bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * __dir), ForceMode.Impulse);
+                            FireAction(specialWeaponDamage, specialWeaponSpeed, _bullets[__num]);
+                        }
+                    }
                 }
                 break;
         }
     }
 
-    public virtual void FireAction(float p_damage, float p_speed, GameObject p_bullet)
+    public virtual void FireAction(float p_damage, float p_speed, Bullet p_bullet)
     {
         RaycastHit __hit;
         if (Physics.Raycast(_currentCameraController.AimPosition(), out __hit, 1000))
