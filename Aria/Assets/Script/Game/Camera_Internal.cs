@@ -10,5 +10,6 @@ public class Camera_Internal : CameraContoller {
         _camLimitsRotationMax.x = 5;
         _camLimitsRotationMin.y = 350;
         _camLimitsRotationMax.y = 10;
+        this.enabled = true;
     }
 }

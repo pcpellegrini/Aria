@@ -14,9 +14,11 @@ public class AirCraft : MonoBehaviour {
     public type currentType;
     public float energy = 100f;
     public float armorEnergy = 10f;
+    public float recoverySpeed;
+    public LayerMask hitLayer;
     public float specialWeaponDamage = 100f;
     public float specialWeaponSpeed = 0.08f;
-    public int specialWeaponAmmo = 3;
+    public float specialWeaponRepairTime = 10f;
     public float normalWeaponDamage = 1f;
     public float normalWeaponSpeed = 0.01f;
     public float normalWeaponTime = 0.1f;
@@ -34,6 +36,7 @@ public class AirCraft : MonoBehaviour {
     public GameObject[] fireEffectLeft2;
     public GameObject[] fireEffectRight1;
     public GameObject[] fireEffectRight2;
+    public ParticleSystem[] normalGunTrail;
     public Transform fireExit;
     public Transform fireExitR;
     public AudioClip engineSound;
@@ -46,9 +49,10 @@ public class AirCraft : MonoBehaviour {
     protected bool _normalGunFiring;
     protected bool _normalGunLocked;
     protected bool _specialGunFiring;
-    protected bool _inGame;
+    protected bool _specialGunLocked;
     protected float _timeDT;
     protected float _normalWeaponHeatCount;
+    protected float _specialWeaponHeatCount;
     protected float _initialEmissionStartSpeed;
     protected float _emissionLightNormalIntensity;
     protected float _speed;
@@ -90,6 +94,8 @@ public class AirCraft : MonoBehaviour {
         _guiManager.energySlider.value = energy;
         _guiManager.heatSlider.maxValue = normalWeaponHeatTime;
         _guiManager.heatSlider.value = _normalWeaponHeatCount;
+        _guiManager.armorSlider.maxValue = armorEnergy;
+        _guiManager.armorSlider.value = armorEnergy;
 
         _instPanel.SetActive(false);
 
@@ -109,24 +115,24 @@ public class AirCraft : MonoBehaviour {
         if (currentType == type.AIRCRAFT_1)
             _anim.SetBool(_animIDAcc, true);
         _collisionManager.ManualStart();
-        _collisionManager.onHitGround += delegate
+        _collisionManager.onHitGround += delegate (Vector3 p_point)
         {
             DecreaseEnergy(5f);
-            _flightController.ApplyImpactForce();
+            _flightController.ApplyImpactForce(p_point);
                 _anim.SetTrigger(_animIDShake);
                 Invoke("CancelAnim", 0.5f);
         };
-        _collisionManager.onHitStaticObject += delegate
+        _collisionManager.onHitStaticObject += delegate (Vector3 p_point)
         {
             DecreaseEnergy(5f);
-            _flightController.ApplyImpactForce();
+            _flightController.ApplyImpactForce(p_point);
             _anim.SetTrigger(_animIDShake);
             Invoke("CancelAnim", 0.5f);
         };
-        _collisionManager.onHitEnemy += delegate
+        _collisionManager.onHitEnemy += delegate (Vector3 p_point)
         {
-            DecreaseEnergy(10f);
-            _flightController.ApplyImpactForce();
+            DecreaseEnergy(15f);
+            _flightController.ApplyImpactForce(p_point);
             _anim.SetTrigger(_animIDShake);
             Invoke("CancelAnim", 0.5f);
         };
@@ -136,7 +142,7 @@ public class AirCraft : MonoBehaviour {
 
         // Change camera
         soundController.InsideCockpit(false);
-        _inGame = true;
+        this.enabled = true;
     }
 
     public virtual void DecreaseEnergy(float p_value)
@@ -156,19 +162,19 @@ public class AirCraft : MonoBehaviour {
 
     public virtual void IncreaseEnergy(float p_value)
     {
-        if (armorEnergy < 10)
+        if (armorEnergy < 100)
         {
             armorEnergy += p_value;
             _guiManager.ChangeValue("armor", armorEnergy);
         }
     }
 
-    public virtual void ManualFixedUpdate()
+    public virtual void FixedUpdate()
     {
         _timeDT = Time.deltaTime;
-        if (!_normalGunFiring && _normalWeaponHeatCount > 0)
+        if ((!_normalGunFiring || _normalGunLocked) && _normalWeaponHeatCount > 0)
         {
-            _normalWeaponHeatCount -= normalWeaponRepairTime * _timeDT;
+            _normalWeaponHeatCount -= _timeDT;
             _guiManager.ChangeValue("heat", _normalWeaponHeatCount);
             if (_normalGunLocked && _normalWeaponHeatCount <= 0 )
             {
@@ -176,14 +182,21 @@ public class AirCraft : MonoBehaviour {
                 _normalGunLocked = false;
             }
         }
-        _flightController.ManualFixedUpdate();
-        _currentCameraController.ManualFixedUpdate();
+        if (_specialGunLocked)
+        {
+            _specialWeaponHeatCount -= _timeDT;
+            _guiManager.ChangeValue("special", _specialWeaponHeatCount / specialWeaponRepairTime);
+            if (_specialWeaponHeatCount <= 0)
+            {
+                _specialGunLocked = false;
+                _specialWeaponHeatCount = 0;
+            }
+        }
         _speed = _flightController.currentSpeed;
-        
-            IncreaseEnergy(_timeDT);
+        IncreaseEnergy(_timeDT * recoverySpeed);
     }
 
-    public virtual void ManualUpdate()
+    public virtual void Update()
     {
         InputControl();
     }
@@ -200,7 +213,7 @@ public class AirCraft : MonoBehaviour {
         float __breaker = Input.GetAxis("Break");
 
         //Pause Game
-        if (Input.GetButtonDown("Pause"))
+       /* if (Input.GetButtonDown("Pause"))
         {
             if (_inGame)
             {
@@ -222,7 +235,7 @@ public class AirCraft : MonoBehaviour {
                 Time.timeScale = 1f;
                 _instPanel.SetActive(false);
             }
-        }
+        }*/
 
         
 
@@ -239,7 +252,7 @@ public class AirCraft : MonoBehaviour {
          }*/
 
         
-        if (_inGame)
+        if (_guiManager.inGame)
         {
             // Boost
             if (__accelerator > 0f && !_flightController.accelerating)
@@ -392,10 +405,11 @@ public class AirCraft : MonoBehaviour {
             }
 
             // Fire
-            if (Input.GetButtonDown("Fire2") && specialWeaponAmmo > 0)
+            if (Input.GetButtonDown("Fire2") && !_specialGunLocked)
             {
-                specialWeaponAmmo--;
-                _guiManager.ChangeValue("special", specialWeaponAmmo);
+                _specialWeaponHeatCount = specialWeaponRepairTime;
+                _specialGunLocked = true;
+                _guiManager.ChangeValue("special", 1f);
                 Fire("special");
                 FireSound(true, "special");
             }
@@ -404,6 +418,12 @@ public class AirCraft : MonoBehaviour {
                 _normalGunFiring = true;
                 if (!_normalGunLocked)
                 {
+                    for (int i = 0; i < normalGunTrail.Length; i++)
+                    {
+                        int __num = i;
+                        normalGunTrail[__num].Play();
+                        normalGunTrail[__num].startSpeed = _speed * 0.01f + 500;
+                    }
                     InvokeRepeating("NormalFireCaller", 0f, normalWeaponTime);
                     FireSound(true, "normal");
                 }
@@ -411,6 +431,11 @@ public class AirCraft : MonoBehaviour {
 
             if (Input.GetButtonUp("Fire1"))
             {
+                for (int i = 0; i < normalGunTrail.Length; i++)
+                {
+                    int __num = i;
+                    normalGunTrail[__num].Stop();
+                }
                 _normalGunFiring = false;
                 FireSound(false, "normal");
                 CancelInvoke("NormalFireCaller");
@@ -423,12 +448,23 @@ public class AirCraft : MonoBehaviour {
                 _normalGunFiring = true;
                 if (!_normalGunLocked)
                 {
+                    for (int i = 0; i < normalGunTrail.Length; i++)
+                    {
+                        int __num = i;
+                        normalGunTrail[__num].Play();
+                        normalGunTrail[__num].startSpeed = _speed*0.01f + 500;
+                    }
                     InvokeRepeating("NormalFireCaller", 0f, normalWeaponTime);
                     FireSound(true, "normal");
                 }
             }
             if (Input.GetButtonUp("Fire1Joystick"))
             {
+                for (int i = 0; i < normalGunTrail.Length; i++)
+                {
+                    int __num = i;
+                    normalGunTrail[__num].Stop();
+                }
                 _normalGunFiring = false;
                 FireSound(false, "normal");
                 CancelInvoke("NormalFireCaller");
@@ -436,10 +472,11 @@ public class AirCraft : MonoBehaviour {
             }
 
             // Fire Special
-            if (Input.GetButtonDown("Fire2Joystick") && !_specialGunFiring && specialWeaponAmmo > 0)
+            if (Input.GetButtonDown("Fire2Joystick") && !_specialGunFiring && !_specialGunLocked)
             {
-                specialWeaponAmmo--;
-                _guiManager.ChangeValue("special", specialWeaponAmmo);
+                _specialWeaponHeatCount = specialWeaponRepairTime;
+                _specialGunLocked = true;
+                _guiManager.ChangeValue("special", 1f);
                 _specialGunFiring = true;
                 Fire("special");
                 FireSound(true, "special");
@@ -466,6 +503,27 @@ public class AirCraft : MonoBehaviour {
     public virtual void ChangeSpeed(string p_state)
     {
 
+    }
+
+    public virtual void PauseGame(bool p_value)
+    {
+        if (p_value)
+        {
+            soundController.PauseAll(true);
+            _flightController.inGame = false;
+            _flightController.enabled = false;
+            _instPanel.SetActive(true);
+        }
+        else
+        {
+            UnityEngine.Cursor.visible = false;
+            soundController.PauseAll(false);
+            if (!_normalGunFiring)
+                soundController.StopSound(SoundController.source.NORMAL_WEAPON);
+            _flightController.inGame = true;
+            _flightController.enabled = true;
+            _instPanel.SetActive(false);
+        }
     }
 
     public virtual void EndAnimation(string p_anim)
@@ -509,6 +567,11 @@ public class AirCraft : MonoBehaviour {
     {
         if (_normalWeaponHeatCount < normalWeaponHeatTime)
         {
+            for (int i = 0; i < normalGunTrail.Length; i++)
+            {
+                int __num = i;
+                normalGunTrail[__num].transform.LookAt(_currentCameraController.AimPosition().GetPoint(1000));
+            }
             _normalWeaponHeatCount += normalWeaponTime;
             _guiManager.ChangeValue("heat", _normalWeaponHeatCount);
             Fire("normal");
@@ -562,7 +625,10 @@ public class AirCraft : MonoBehaviour {
                 DisableAllFire();
                 fireEffectLeft1[Random.Range(0, fireEffectLeft1.Length)].SetActive(true);
                 if (currentType == type.AIRCRAFT_1)//tmp
+                {
                     fireEffectLeft2[Random.Range(0, fireEffectLeft2.Length)].SetActive(true);
+                }
+                    
                 fireEffectRight1[Random.Range(0, fireEffectRight1.Length)].SetActive(true);
                 if (currentType == type.AIRCRAFT_1)//tmp
                     fireEffectRight2[Random.Range(0, fireEffectRight2.Length)].SetActive(true);
@@ -576,10 +642,8 @@ public class AirCraft : MonoBehaviour {
                     if (!_bullets[__num].isActive)
                     {
                         _bullets[__num].isActive = false;
-                        _bullets[__num].transform.position = fireExit.position;
-                        _bullets[__num].transform.rotation = transform.rotation;
                         _bullets[__num].transform.LookAt(__dir);
-                        _bullets[__num].ManualStart();
+                        _bullets[__num].Enable(fireExit.position, transform.rotation);
                         _bullets[__num].bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * __dir), ForceMode.Impulse);
                         FireAction(specialWeaponDamage, specialWeaponSpeed, _bullets[__num]);
                     }
@@ -592,10 +656,8 @@ public class AirCraft : MonoBehaviour {
                         if (!_bullets[__num].isActive)
                         {
                             _bullets[__num].isActive = false;
-                            _bullets[__num].transform.position = fireExitR.position;
-                            _bullets[__num].transform.rotation = transform.rotation;
                             _bullets[__num].transform.LookAt(__dir);
-                            _bullets[__num].ManualStart();
+                            _bullets[__num].Enable(fireExitR.position, transform.rotation);
                             _bullets[__num].bulletRigidbody.AddForce((((_flightController.currentSpeed / _rigidbody.mass) + 10f) * __dir), ForceMode.Impulse);
                             FireAction(specialWeaponDamage, specialWeaponSpeed, _bullets[__num]);
                         }
@@ -608,18 +670,11 @@ public class AirCraft : MonoBehaviour {
     public virtual void FireAction(float p_damage, float p_speed, Bullet p_bullet)
     {
         RaycastHit __hit;
-        if (Physics.Raycast(_currentCameraController.AimPosition(), out __hit, 1000))
+        if (Physics.Raycast(_currentCameraController.AimPosition(), out __hit, 1000, hitLayer))
         {
-
-            if (__hit.collider.tag == "tower")
-            {
-                if (__hit.collider.GetComponent<Tower>() != null)
-                {
-                    Tower __tower = __hit.collider.GetComponent<Tower>();
-                    float __timeToHit = __hit.distance * p_speed * _timeDT;
-                    __tower.Damage(p_damage, __timeToHit, p_bullet);
-                }
-            }
+            Monster __monster = __hit.collider.transform.root.GetComponent<Monster>();
+            float __timeToHit = __hit.distance * p_speed * _timeDT;
+            __monster.Damage(__hit.collider.tag, p_damage, __timeToHit, p_bullet);
         }
     }
 

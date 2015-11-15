@@ -51,17 +51,11 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
@@ -80,18 +74,23 @@
     <Compile Include="Assets\Script\Game\Aircraft03.cs" />
     <Compile Include="Assets\Script\Game\AircraftCollisionManager.cs" />
     <Compile Include="Assets\Script\Game\AnimationController.cs" />
+    <Compile Include="Assets\Script\Game\AnimationControllerMonster.cs" />
+    <Compile Include="Assets\Script\Game\Bullet.cs" />
+    <Compile Include="Assets\Script\Game\CameraContoller.cs" />
     <Compile Include="Assets\Script\Game\Camera_External.cs" />
     <Compile Include="Assets\Script\Game\Camera_Internal.cs" />
     <Compile Include="Assets\Script\Game\Flight.cs" />
     <Compile Include="Assets\Script\Game\GuiManager.cs" />
+    <Compile Include="Assets\Script\Game\Manager.cs" />
+    <Compile Include="Assets\Script\Game\Monster.cs" />
+    <Compile Include="Assets\Script\Game\MonsterCollisionManager.cs" />
+    <Compile Include="Assets\Script\Game\MonsterSpit.cs" />
+    <Compile Include="Assets\Script\Game\Monster_Aerial.cs" />
     <Compile Include="Assets\Script\Game\Monster_Desert.cs" />
     <Compile Include="Assets\Script\Game\SoundController.cs" />
     <Compile Include="Assets\Script\Menu\Info.cs" />
     <Compile Include="Assets\Script\Menu\MenuManager.cs" />
     <Compile Include="Assets\Script\Menu\SoundManager.cs" />
-    <Compile Include="Assets\Script\Test\Bullet.cs" />
-    <Compile Include="Assets\Script\Test\CameraContoller.cs" />
-    <Compile Include="Assets\Script\Test\Manager.cs" />
     <Compile Include="Assets\Script\Test\Tower.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

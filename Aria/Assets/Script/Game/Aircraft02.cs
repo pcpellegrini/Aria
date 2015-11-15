@@ -27,9 +27,9 @@ public class Aircraft02 : AirCraft {
         }*/
     }
 
-    public override void ManualFixedUpdate()
+    public override void FixedUpdate()
     {
-        base.ManualFixedUpdate();
+        base.FixedUpdate();
         for (int i = 0; i< rotors.Length; i++)
         {
             int __num = i;

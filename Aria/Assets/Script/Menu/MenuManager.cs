@@ -50,7 +50,12 @@ public class MenuManager : MonoBehaviour {
 			Application.Quit();
 			break;
 		case "startGame":
-			Application.LoadLevel("01");
+                if (gameInfo.selectedLevel == "01")
+                    Application.LoadLevel("01");
+                else if (gameInfo.selectedLevel == "02")
+                    Application.LoadLevel("02");
+                else
+                    Debug.Log("Select a level!");
 			break;
 		}
 	}
@@ -60,7 +65,12 @@ public class MenuManager : MonoBehaviour {
 		gameInfo.selectedAircraft = (AirCraft.type)p_type;
 	}
 
-	public void SaveOptions()
+    public void SelectLevel(string p_level)
+    {
+        gameInfo.selectedLevel = p_level;
+    }
+
+    public void SaveOptions()
 	{
 		soundManager.SaveOptions ();
 	}

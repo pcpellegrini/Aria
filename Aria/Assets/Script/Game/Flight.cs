@@ -110,6 +110,7 @@ public class Flight : MonoBehaviour
     private float _pitchAdditive;
     private float _rollLimitMax = 150f;
     private float _rollLimitMin = -150f;
+    private Vector3 _dirForce;
     private Rigidbody _rigidbody;
     private Quaternion _AddRotation;
     private Quaternion _AddRotationCameraTPV;
@@ -123,10 +124,10 @@ public class Flight : MonoBehaviour
         _rigidbody.transform.TransformPoint(centerOfMass.position);
         AccelerationControl();
         _inGame = true;
-        
+        this.enabled = true;
     }
 
-    public void ManualFixedUpdate()
+    void FixedUpdate()
     {
         _timeDT = Time.deltaTime;
 
@@ -138,7 +139,7 @@ public class Flight : MonoBehaviour
         else if (_applyingForce)
         {
             Vector3 __dir = new Vector3(_rigidbody.velocity.x, impactForce, _rigidbody.velocity.z);
-            _rigidbody.velocity = __dir;
+            _rigidbody.velocity = impactForce * _dirForce;
             SpecialRotation();
         }
     }
@@ -247,8 +248,9 @@ public class Flight : MonoBehaviour
         }
     }
 
-    public void ApplyImpactForce()
+    public void ApplyImpactForce(Vector3 p_point)
     {
+        _dirForce = transform.position - p_point;
         _applyingForce = true;
         
     }

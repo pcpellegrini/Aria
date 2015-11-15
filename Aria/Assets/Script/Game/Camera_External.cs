@@ -8,5 +8,6 @@ public class Camera_External : CameraContoller
     public override void ManualStart(Rigidbody p_rigibody)
     {
         base.ManualStart(p_rigibody);
+        this.enabled = true;
     }
 }
