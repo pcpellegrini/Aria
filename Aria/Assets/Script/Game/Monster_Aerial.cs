@@ -39,11 +39,22 @@ public class Monster_Aerial : Monster {
         collisionFront.onTrigger += delegate (GameObject p_player)
         {
             _player = p_player;
-            if (!_inSpitAttack)
+            int __rnd = Random.Range(1, 2);
+            if (__rnd > 1)
             {
-                Debug.Log("spit");
-                _anim.SetTrigger(_animSpit);
-                _inSpitAttack = true;
+                if (!_inSpitAttack)
+                {
+                    _anim.SetTrigger(_animSpit);
+                    _inSpitAttack = true;
+                }
+            }
+            else
+            {
+                if (!_inRasanteAttack)
+                {
+                    RasanteAttack(true);
+                    _inRasanteAttack = true;
+                }
             }
             _currentArea = collisionFront.positionType;
         };
@@ -56,10 +67,10 @@ public class Monster_Aerial : Monster {
         collisionAround.onTrigger += delegate (GameObject p_player)
         {
             _player = p_player;
-            if (!_inRasanteAttack)
+            if (!_inRoarAttack)
             {
-                RasanteAttack(true);
-                _inRasanteAttack = true;
+                _anim.SetTrigger(_animRoar);
+                _inRoarAttack = true;
             }
             _currentArea = collisionAround.positionType;
         };
@@ -77,29 +88,7 @@ public class Monster_Aerial : Monster {
 
     void FixedUpdate()
     {
-        if (_walking)
-        {
-            if (_currentSpeed < maxSpeed)
-            {
-                _currentSpeed += acceletaion;
-            }
-            _rigidbody.velocity = _rigidbody.transform.forward * _currentSpeed;
-        }
-        else if (_currentSpeed > 0)
-        {
-            _currentSpeed -= acceletaion * 2;
-            if (_currentSpeed >= 0)
-            {
-                _rigidbody.velocity = _rigidbody.transform.forward * _currentSpeed;
-            }
-            else
-            {
-                _currentSpeed = 0f;
-                _rigidbody.velocity = Vector3.zero;
-            }
-        }
-
-        if (_inRasanteAttack && _player != null)
+        if (_currentArea == MonsterCollisionManager.type.FRONT && _player != null)
         {
             transform.LookAt(_player.transform);
         }
@@ -120,7 +109,7 @@ public class Monster_Aerial : Monster {
             case "Spit":
                 if (_player != null)
                 {
-                    Vector3 __dir = (_player.transform.position - spitPosition.position) * 10f;
+                    Vector3 __dir = (_player.transform.position - spitPosition.position) * 15f;
                     spit.Enable(spitPosition.position, __dir);
                 }
                 break;
@@ -129,7 +118,7 @@ public class Monster_Aerial : Monster {
                 if (_currentArea == MonsterCollisionManager.type.AROUND)
                     StartCoroutine(GoToAnimation(timeBetweenAttacks, "Roar"));
                 else
-                    StartCoroutine(GoToAnimation(timeBetweenAttacks, "Walk"));
+                    StartCoroutine(GoToAnimation(timeBetweenAttacks, "Fly"));
                 break;
             case "RoarDamage":
                 if (_player != null)
@@ -166,14 +155,16 @@ public class Monster_Aerial : Monster {
         if (p_value)
         {
             Vector3 __dir = _player.transform.position - transform.position;
-            _rigidbody.AddForce(__dir * 100f, ForceMode.Impulse);
+            _rigidbody.AddForce(__dir * 1000f, ForceMode.Impulse);
             _anim.SetBool(_animPlan, true);
             Invoke("CancelRasante", 3f);
         }
         else
         {
+            Quaternion __rot = transform.rotation;
+            __rot.eulerAngles = new Vector3(0f, __rot.eulerAngles.y, __rot.eulerAngles.z);
+            transform.rotation = __rot;
             _inRasanteAttack = false;
-            transform.rotation = Quaternion.identity;
             _rigidbody.velocity = Vector3.zero;
             _anim.SetBool(_animPlan, false);
         }

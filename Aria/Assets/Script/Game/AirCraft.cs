@@ -131,7 +131,7 @@ public class AirCraft : MonoBehaviour {
         };
         _collisionManager.onHitEnemy += delegate (Vector3 p_point)
         {
-            DecreaseEnergy(15f);
+            DecreaseEnergy(20f);
             _flightController.ApplyImpactForce(p_point);
             _anim.SetTrigger(_animIDShake);
             Invoke("CancelAnim", 0.5f);
@@ -211,36 +211,12 @@ public class AirCraft : MonoBehaviour {
     {
         float __accelerator = Input.GetAxis("Accelerate");
         float __breaker = Input.GetAxis("Break");
-
-        //Pause Game
-       /* if (Input.GetButtonDown("Pause"))
-        {
-            if (_inGame)
-            {
-                UnityEngine.Cursor.visible = true;
-                soundController.PauseAll(true);
-                _flightController.inGame = false;
-                _inGame = false;
-                Time.timeScale = 0;
-                _instPanel.SetActive(true);
-            }
-            else
-            {
-                UnityEngine.Cursor.visible = false;
-                soundController.PauseAll(false);
-                if (!_normalGunFiring)
-                    soundController.StopSound(SoundController.source.NORMAL_WEAPON);
-                _flightController.inGame = true;
-                _inGame = true;
-                Time.timeScale = 1f;
-                _instPanel.SetActive(false);
-            }
-        }*/
+        
 
         
 
         // Joystick Aim
-        /* if (Input.GetAxis("MouseH") != 0 || Input.GetAxis("MouseV") != 0)
+         if (Input.GetAxis("MouseH") != 0 || Input.GetAxis("MouseV") != 0)
          {
              Vector2 __dir = new Vector2(Input.GetAxis("MouseH"), Input.GetAxis("MouseV"));
              _currentCameraController.aimFollowMouse = false;
@@ -249,7 +225,7 @@ public class AirCraft : MonoBehaviour {
          else
          {
              _currentCameraController._mousePos = new Vector2(0f, 0f);
-         }*/
+         }
 
         
         if (_guiManager.inGame)
