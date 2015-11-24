@@ -197,6 +197,11 @@ public class Monster_Desert : Monster {
                 energy -= p_damage*1.5f;
                 break;
         }
+        if (energy <= 0f)
+        {
+            _anim.SetTrigger(_animDeath);
+            _isDead = true;
+        }
         base.LifeChange();
     }
 

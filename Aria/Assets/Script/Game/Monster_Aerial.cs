@@ -5,12 +5,14 @@ public class Monster_Aerial : Monster {
     
     public MonsterCollisionManager collisionFront;
     public MonsterCollisionManager collisionAround;
+    public MonsterCollisionManager collisionBody;
     public Transform spitPosition;
     public MonsterSpit spit;
 
     private MonsterCollisionManager.type _currentArea;
     private bool _goWalk;
     private bool _walking;
+    private bool _grabing;
     private bool _inRasanteAttack;
     private bool _inSpitAttack;
     private bool _inRoarAttack;
@@ -36,13 +38,21 @@ public class Monster_Aerial : Monster {
         _animDeath = Animator.StringToHash("Death");
         _currentSpeed = 0;
 
+        collisionBody.onGrabCollision += delegate (Vector3 p_point)
+        {
+            if (!_grabing)
+            {
+                _grabing = true;
+                Grab(p_point);
+            }
+        };
         collisionFront.onTrigger += delegate (GameObject p_player)
         {
             _player = p_player;
-            int __rnd = Random.Range(1, 2);
+            int __rnd = Random.Range(1, 3);
             if (__rnd > 1)
             {
-                if (!_inSpitAttack)
+                if (!_inSpitAttack && !_isDead)
                 {
                     _anim.SetTrigger(_animSpit);
                     _inSpitAttack = true;
@@ -50,7 +60,7 @@ public class Monster_Aerial : Monster {
             }
             else
             {
-                if (!_inRasanteAttack)
+                if (!_inRasanteAttack && !_isDead)
                 {
                     RasanteAttack(true);
                     _inRasanteAttack = true;
@@ -67,7 +77,7 @@ public class Monster_Aerial : Monster {
         collisionAround.onTrigger += delegate (GameObject p_player)
         {
             _player = p_player;
-            if (!_inRoarAttack)
+            if (!_inRoarAttack && !_isDead)
             {
                 _anim.SetTrigger(_animRoar);
                 _inRoarAttack = true;
@@ -84,11 +94,12 @@ public class Monster_Aerial : Monster {
 
         this.enabled = true;
         spit.ManualStart();
+        //Invoke("GoHide", 10f);
     }
 
     void FixedUpdate()
     {
-        if (_currentArea == MonsterCollisionManager.type.FRONT && _player != null)
+        if (_currentArea == MonsterCollisionManager.type.FRONT && _player != null && !_isDead)
         {
             transform.LookAt(_player.transform);
         }
@@ -132,7 +143,8 @@ public class Monster_Aerial : Monster {
     public override void Damage(string p_point, float p_damage, float p_time, Bullet p_bullet)
     {
         base.Damage(p_point, p_time, p_damage, p_bullet);
-        StartCoroutine(ApplyDamage(p_point, p_damage, p_time, p_bullet));
+        if (!_isDead)
+            StartCoroutine(ApplyDamage(p_point, p_damage, p_time, p_bullet));
 
     }
 
@@ -142,6 +154,12 @@ public class Monster_Aerial : Monster {
         if (p_bullet != null)
             p_bullet.Disable();
         energy -= p_damage * 1f;
+        if (energy <= 0f)
+        {
+            _anim.SetTrigger(_animDeath);
+            _rigidbody.useGravity = true;
+            _isDead = true;
+        }
         base.LifeChange();
     }
 
@@ -168,8 +186,6 @@ public class Monster_Aerial : Monster {
             _rigidbody.velocity = Vector3.zero;
             _anim.SetBool(_animPlan, false);
         }
-        
-
     }
 
     IEnumerator GoToAnimation(float p_time, string p_anim)
@@ -191,14 +207,33 @@ public class Monster_Aerial : Monster {
                     _anim.SetTrigger(_animSpit);
                 }
                 break;
-            case "Tail":
-                /*if (!_inRoarAttack && !_inSpitAttack && !_inTailAttack && !_walking)
-                {
-                    _inTailAttack = true;
-                    _anim.SetTrigger(_animTail);
-                }*/
-                break;
         }
     }
 
+    private void Grab(Vector3 p_point)
+    {
+        _rigidbody.velocity = Vector3.zero;
+        _anim.SetBool(_animGrab, true);
+    }
+
+    private void GoHide()
+    {
+        float __dist = Mathf.Infinity;
+        int __idx = 0;
+        for (int i = 0; i < islands.Length; i++ )
+        {
+            int __num = i;
+            float __tmpDist = Vector3.Distance(islands[__num].position, transform.position);
+            if (__tmpDist < __dist)
+            {
+                __dist = __tmpDist;
+                __idx = __num;
+            }
+        }
+        transform.LookAt(islands[__idx]);
+        Vector3 __distance = islands[__idx].position - transform.position;
+        float __mag = __distance.magnitude;
+        Vector3 __dir = __distance / __mag;
+        _rigidbody.velocity = (__dir) * maxSpeed;
+    }
 }

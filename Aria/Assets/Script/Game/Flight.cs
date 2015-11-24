@@ -108,8 +108,8 @@ public class Flight : MonoBehaviour
     private float _rollAdditive;
     private float _yawAdditive;
     private float _pitchAdditive;
-    private float _rollLimitMax = 150f;
-    private float _rollLimitMin = -150f;
+    private float _rollLimitMax = 150;
+    private float _rollLimitMin = -150;
     private Vector3 _dirForce;
     private Rigidbody _rigidbody;
     private Quaternion _AddRotation;
@@ -251,6 +251,7 @@ public class Flight : MonoBehaviour
     public void ApplyImpactForce(Vector3 p_point)
     {
         _dirForce = transform.position - p_point;
+        _dirForce = new Vector3(_dirForce.x, _dirForce.y, -_dirForce.z);
         _applyingForce = true;
         
     }

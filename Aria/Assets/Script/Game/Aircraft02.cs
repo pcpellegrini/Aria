@@ -12,6 +12,7 @@ public class Aircraft02 : AirCraft {
 
     public override void ChangeSpeed(string p_state)
     {
+        base.ChangeSpeed(p_state);
         /*switch (p_state)
         {
             case "break":

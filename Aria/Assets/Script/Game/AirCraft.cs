@@ -40,11 +40,14 @@ public class AirCraft : MonoBehaviour {
     public Transform fireExit;
     public Transform fireExitR;
     public AudioClip engineSound;
+    public AudioClip engineSlowSound;
     public AudioClip boostSound;
+    public AudioClip barrelRoll;
     public AudioClip[] normalWeaponSound;
     public AudioClip[] specialWeaponSound;
+    public AudioClip[] sandHitClip;
 
-    
+
 
     protected bool _normalGunFiring;
     protected bool _normalGunLocked;
@@ -129,9 +132,9 @@ public class AirCraft : MonoBehaviour {
             _anim.SetTrigger(_animIDShake);
             Invoke("CancelAnim", 0.5f);
         };
-        _collisionManager.onHitEnemy += delegate (Vector3 p_point)
+        _collisionManager.onHitEnemy += delegate (Vector3 p_point, float p_damage)
         {
-            DecreaseEnergy(20f);
+            DecreaseEnergy(p_damage);
             _flightController.ApplyImpactForce(p_point);
             _anim.SetTrigger(_animIDShake);
             Invoke("CancelAnim", 0.5f);
@@ -157,7 +160,11 @@ public class AirCraft : MonoBehaviour {
             energy -= p_value;
             _guiManager.ChangeValue("energy", energy);
         }
-        
+        if (energy <= 0f)
+        {
+            UnityEngine.Cursor.visible = true;
+            Application.LoadLevel("Menu");
+        }
     }
 
     public virtual void IncreaseEnergy(float p_value)
@@ -179,6 +186,7 @@ public class AirCraft : MonoBehaviour {
             if (_normalGunLocked && _normalWeaponHeatCount <= 0 )
             {
                 _normalWeaponHeatCount = 0f;
+                _guiManager.heatSlider.maxValue = normalWeaponHeatTime;
                 _normalGunLocked = false;
             }
         }
@@ -361,12 +369,10 @@ public class AirCraft : MonoBehaviour {
                 cameraBack.enabled = true;
                 TPSCameraController.mainCam.enabled = false;
                 FPSCameraController.mainCam.enabled = false;
-                _aimHUD.SetActive(false);
             }
             if (Input.GetButtonUp("Camera Back"))
             {
                 cameraBack.enabled = false;
-                _aimHUD.SetActive(true);
                 if (_currentCameraController.type == CameraContoller.cameraType.FIRST_PERSON_VISION)
                 {
                     TPSCameraController.mainCam.enabled = false;
@@ -392,6 +398,7 @@ public class AirCraft : MonoBehaviour {
             if (Input.GetButtonDown("Fire1"))
             {
                 _normalGunFiring = true;
+                _currentCameraController.StartFiring(true);
                 if (!_normalGunLocked)
                 {
                     for (int i = 0; i < normalGunTrail.Length; i++)
@@ -413,6 +420,7 @@ public class AirCraft : MonoBehaviour {
                     normalGunTrail[__num].Stop();
                 }
                 _normalGunFiring = false;
+                _currentCameraController.StartFiring(false);
                 FireSound(false, "normal");
                 CancelInvoke("NormalFireCaller");
                 DisableAllFire();
@@ -422,6 +430,7 @@ public class AirCraft : MonoBehaviour {
             if (Input.GetButtonDown("Fire1Joystick") && !_normalGunFiring)
             {
                 _normalGunFiring = true;
+                _currentCameraController.StartFiring(true);
                 if (!_normalGunLocked)
                 {
                     for (int i = 0; i < normalGunTrail.Length; i++)
@@ -441,6 +450,7 @@ public class AirCraft : MonoBehaviour {
                     int __num = i;
                     normalGunTrail[__num].Stop();
                 }
+                _currentCameraController.StartFiring(false);
                 _normalGunFiring = false;
                 FireSound(false, "normal");
                 CancelInvoke("NormalFireCaller");
@@ -454,22 +464,26 @@ public class AirCraft : MonoBehaviour {
                 _specialGunLocked = true;
                 _guiManager.ChangeValue("special", 1f);
                 _specialGunFiring = true;
+                _currentCameraController.StartFiring(true);
                 Fire("special");
                 FireSound(true, "special");
             }
             if (Input.GetButtonUp("Fire2Joystick"))
             {
                 _specialGunFiring = false;
+                _currentCameraController.StartFiring(false);
             }
 
             // BarrelRoll
             if (Input.GetButtonDown("Barrel Roll Left") && !_flightController.barrelRollActive)
             {
+                soundController.PlaySound(SoundController.source.BARREL, barrelRoll);
                 _anim.SetTrigger(_animIDBarrelLeft);
                 _flightController.barrelRollActive = true;
             }
             if (Input.GetButtonDown("Barrel Roll Right") && !_flightController.barrelRollActive)
             {
+                soundController.PlaySound(SoundController.source.BARREL, barrelRoll);
                 _anim.SetTrigger(_animIDBarrelRight);
                 _flightController.barrelRollActive = true;
             }
@@ -478,7 +492,16 @@ public class AirCraft : MonoBehaviour {
 
     public virtual void ChangeSpeed(string p_state)
     {
-
+        if (p_state == "normal")
+        {
+            soundController.StopSound(SoundController.source.ENGINE);
+            soundController.PlaySound(SoundController.source.ENGINE, engineSound);
+        }
+        else if (p_state == "break")
+        {
+            soundController.StopSound(SoundController.source.ENGINE);
+            soundController.PlaySound(SoundController.source.ENGINE, engineSlowSound);
+        }
     }
 
     public virtual void PauseGame(bool p_value)
@@ -496,6 +519,7 @@ public class AirCraft : MonoBehaviour {
             soundController.PauseAll(false);
             if (!_normalGunFiring)
                 soundController.StopSound(SoundController.source.NORMAL_WEAPON);
+
             _flightController.inGame = true;
             _flightController.enabled = true;
             _instPanel.SetActive(false);
@@ -554,6 +578,13 @@ public class AirCraft : MonoBehaviour {
         }
         else
         {
+            for (int i = 0; i < normalGunTrail.Length; i++)
+            {
+                int __num = i;
+                normalGunTrail[__num].Stop();
+            }
+            _guiManager.heatSlider.maxValue = normalWeaponRepairTime;
+            _normalWeaponHeatCount = normalWeaponRepairTime;
             _normalGunLocked = true;
             //_normalGunFiring = false;
             FireSound(false, "normal");
@@ -649,9 +680,20 @@ public class AirCraft : MonoBehaviour {
         if (Physics.Raycast(_currentCameraController.AimPosition(), out __hit, 1000, hitLayer))
         {
             Monster __monster = __hit.collider.transform.root.GetComponent<Monster>();
-            float __timeToHit = __hit.distance * p_speed * _timeDT;
-            __monster.Damage(__hit.collider.tag, p_damage, __timeToHit, p_bullet);
+            if (__monster != null)
+            {
+                float __timeToHit = __hit.distance * p_speed * _timeDT;
+                __monster.Damage(__hit.collider.tag, p_damage, __timeToHit, p_bullet);
+                Invoke("SoundHit", __timeToHit);
+                _currentCameraController.AimHit();
+            }
         }
+    }
+
+    private void SoundHit()
+    {
+        int __rnd = Random.Range(0, sandHitClip.Length);
+        soundController.PlaySound(SoundController.source.SAND_HIT, sandHitClip[__rnd]);
     }
 
     public virtual void EnableExternal(bool p_value)

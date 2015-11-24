@@ -53,7 +53,7 @@ public class MenuManager : MonoBehaviour {
                 if (gameInfo.selectedLevel == "01")
                     Application.LoadLevel("01");
                 else if (gameInfo.selectedLevel == "02")
-                    Application.LoadLevel("02");
+                    Application.LoadLevel("fase2 mapa");
                 else
                     Debug.Log("Select a level!");
 			break;

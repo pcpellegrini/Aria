@@ -12,15 +12,26 @@ public class MonsterCollisionManager : MonoBehaviour {
         RIGHT,
         LEFT,
         AROUND,
-        AWAY
+        AWAY,
+        BODY
     }
     public type positionType;
     public event Action<GameObject> onTrigger;
     public event Action onExitArea;
+    public event Action<Vector3> onGrabCollision;
+
+    void OnCollisionEnter(Collision p_collision)
+    {
+        if (p_collision.gameObject.tag == "island" && positionType == type.BODY)
+        {
+            Debug.Log("hitIsland");
+            if (onGrabCollision != null) onGrabCollision(p_collision.contacts[0].point);
+        }
+    }
 
     void OnTriggerEnter(Collider p_collider)
     {
-        if (p_collider.tag == "Player")
+        if (p_collider.tag == "Player" && positionType != type.BODY)
         {
             if (onTrigger != null) onTrigger(p_collider.gameObject);
         }
@@ -28,7 +39,7 @@ public class MonsterCollisionManager : MonoBehaviour {
 
     void OnTriggerExit(Collider p_collider)
     {
-        if (p_collider.tag == "Player")
+        if (p_collider.tag == "Player" && positionType != type.BODY)
         {
             if (onExitArea != null) onExitArea();
         }

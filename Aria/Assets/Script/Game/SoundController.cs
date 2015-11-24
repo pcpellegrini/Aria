@@ -10,13 +10,18 @@ public class SoundController : MonoBehaviour {
         BOOST,
         MUSIC,
         NORMAL_WEAPON,
-        SPECIAL_WEAPON
+        SPECIAL_WEAPON,
+        BARREL,
+        SAND_HIT
     }
 
     public AudioSource engineSound;
     public AudioSource boostSound;
     public AudioSource normalWeaponSound;
     public AudioSource specialweaponSound;
+    public AudioSource barrelRollSound;
+    public AudioSource monsterSound;
+
     [HideInInspector]
     public AudioSource musicSound;
 
@@ -50,6 +55,14 @@ public class SoundController : MonoBehaviour {
             case source.SPECIAL_WEAPON:
                 specialweaponSound.clip = p_clip;
                 specialweaponSound.Play();
+                break;
+            case source.BARREL:
+                barrelRollSound.clip = p_clip;
+                barrelRollSound.Play();
+                break;
+            case source.SAND_HIT:
+                monsterSound.clip = p_clip;
+                monsterSound.Play();
                 break;
         }
     }

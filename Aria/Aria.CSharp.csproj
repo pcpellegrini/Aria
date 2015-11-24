@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\Clouds.cs" />
     <Compile Include="Assets\Script\Game\AirCraft.cs" />
     <Compile Include="Assets\Script\Game\Aircraft01.cs" />
     <Compile Include="Assets\Script\Game\Aircraft02.cs" />
@@ -87,11 +88,13 @@
     <Compile Include="Assets\Script\Game\MonsterSpit.cs" />
     <Compile Include="Assets\Script\Game\Monster_Aerial.cs" />
     <Compile Include="Assets\Script\Game\Monster_Desert.cs" />
+    <Compile Include="Assets\Script\Game\Monster_Little.cs" />
     <Compile Include="Assets\Script\Game\SoundController.cs" />
     <Compile Include="Assets\Script\Menu\Info.cs" />
     <Compile Include="Assets\Script\Menu\MenuManager.cs" />
     <Compile Include="Assets\Script\Menu\SoundManager.cs" />
     <Compile Include="Assets\Script\Test\Tower.cs" />
+    <Compile Include="Assets\TerrainToolkit\TerrainToolkit.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
