@@ -82,10 +82,12 @@ public class Monster_Aerial : Monster {
                 _anim.SetTrigger(_animRoar);
                 _inRoarAttack = true;
             }
+            PlayerOnMonsterZone(true);
             _currentArea = collisionAround.positionType;
         };
         collisionAround.onExitArea += delegate
         {
+            PlayerOnMonsterZone(false);
             if (_currentArea == MonsterCollisionManager.type.AROUND)
                 _currentArea = MonsterCollisionManager.type.AWAY;
             //StartCoroutine(GoToAnimation(timeBetweenAttacks, "Walk"));
@@ -235,5 +237,10 @@ public class Monster_Aerial : Monster {
         float __mag = __distance.magnitude;
         Vector3 __dir = __distance / __mag;
         _rigidbody.velocity = (__dir) * maxSpeed;
+    }
+
+    public override void PlayerOnMonsterZone(bool p_value)
+    {
+        base.PlayerOnMonsterZone(p_value);
     }
 }

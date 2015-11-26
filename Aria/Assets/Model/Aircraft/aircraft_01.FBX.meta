@@ -14,6 +14,9 @@ ModelImporter:
     100012: Object010
     100014: Object011
     100016: Object012
+    100018: Object021
+    100020: Object022
+    100022: Object023
     400000: //RootNode
     400002: Object005
     400004: Object006
@@ -23,6 +26,9 @@ ModelImporter:
     400012: Object010
     400014: Object011
     400016: Object012
+    400018: Object021
+    400020: Object022
+    400022: Object023
     2300000: //RootNode
     2300002: Object005
     2300004: Object006
@@ -32,6 +38,9 @@ ModelImporter:
     2300012: Object010
     2300014: Object011
     2300016: Object012
+    2300018: Object021
+    2300020: Object022
+    2300022: Object023
     3300000: //RootNode
     3300002: Object005
     3300004: Object006
@@ -41,6 +50,9 @@ ModelImporter:
     3300012: Object010
     3300014: Object011
     3300016: Object012
+    3300018: Object021
+    3300020: Object022
+    3300022: Object023
     4300000: Box001
     4300002: Object009
     4300004: Object010
@@ -50,6 +62,9 @@ ModelImporter:
     4300012: Object008
     4300014: Object006
     4300016: Object005
+    4300018: Object021
+    4300020: Object023
+    4300022: Object022
   materials:
     importMaterials: 1
     materialName: 0
@@ -106,8 +121,10 @@ ModelImporter:
     legStretch: .0500000007
     feetSpacing: 0
     rootMotionBoneName: 
+    hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
+  humanoidOversampling: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

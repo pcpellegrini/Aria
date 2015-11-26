@@ -77,6 +77,39 @@ public class Manager : MonoBehaviour {
         {
             guiManager.ChangeValue("monsterEnergy", p_energy);
         };
+        currentMonster.onPlayerEnterMonsterZone += delegate
+        {
+            for (int i = 0; i < _monsterLittle.Count; i++)
+            {
+                int __num = i;
+                if (_monsterLittle[__num].isActive)
+                {
+                    if (_monsterLittle[__num].inPatrol)
+                    {
+                        _monsterLittle[__num].InvokeGoHome();
+                        
+                    }
+                    else
+                    {
+                        _monsterLittle[__num].FollowPlayer(_currentPLayer);
+                    }
+                }
+            }
+        };
+        currentMonster.onPlayerExitMonsterZone += delegate
+        {
+            for (int i = 0; i < _monsterLittle.Count; i++)
+            {
+                int __num = i;
+                if (_monsterLittle[__num].isActive)
+                {
+                    if (_monsterLittle[__num].inPatrol)
+                    {
+                        _monsterLittle[__num].FollowPlayer(_currentPLayer);
+                    }
+                }
+            }
+        };
         guiManager.inGame = true;
         _currentPLayerCS.TPSCameraController.monster = currentMonster.gameObject;
         _currentPLayerCS.FPSCameraController.monster = currentMonster.gameObject;

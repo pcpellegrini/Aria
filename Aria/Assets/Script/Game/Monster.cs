@@ -11,6 +11,8 @@ public class Monster : MonoBehaviour {
         LITTLE
     }
     public event Action<float> onEnergyChange;
+    public event Action onPlayerEnterMonsterZone;
+    public event Action onPlayerExitMonsterZone;
     public event Action onDisable;
 
     public monsterType type;
@@ -28,6 +30,12 @@ public class Monster : MonoBehaviour {
     public Transform[] islands;
 
     protected bool _isDead;
+    protected bool _inPatrol;
+    public bool inPatrol
+    {
+        get { return _inPatrol; }
+        set { _inPatrol = value; }
+    }
     protected float _currentSpeed;
     protected Animator _anim;
     protected Rigidbody _rigidbody;
@@ -85,5 +93,33 @@ public class Monster : MonoBehaviour {
     public virtual void OnDisableMonster()
     {
         if (onDisable != null) onDisable();
+    }
+
+    public virtual void PlayerOnMonsterZone(bool p_value)
+    {
+        if (p_value)
+        {
+            if (onPlayerEnterMonsterZone != null) onPlayerEnterMonsterZone();
+        }
+        else
+        {
+            if (onPlayerExitMonsterZone != null) onPlayerExitMonsterZone();
+        }
+        
+    }
+
+    public virtual void GoHome(Vector3 p_position)
+    {
+
+    }
+
+    public virtual void InvokeGoHome()
+    {
+
+    }
+
+    public virtual void FollowPlayer(GameObject p_player)
+    {
+
     }
 }

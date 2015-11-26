@@ -8,18 +8,49 @@ ModelImporter:
     100000: //RootNode
     100002: RotorD
     100004: RotorE
+    100006: arma1
+    100008: arma2
+    100010: arma3
+    100012: arma4
+    100014: rotor1
+    100016: rotor2
     400000: //RootNode
     400002: RotorD
     400004: RotorE
+    400006: arma1
+    400008: arma2
+    400010: arma3
+    400012: arma4
+    400014: rotor1
+    400016: rotor2
     2300000: //RootNode
     2300002: RotorD
     2300004: RotorE
+    2300006: arma1
+    2300008: arma2
+    2300010: arma3
+    2300012: arma4
+    2300014: rotor1
+    2300016: rotor2
     3300000: //RootNode
     3300002: RotorD
     3300004: RotorE
+    3300006: arma1
+    3300008: arma2
+    3300010: arma3
+    3300012: arma4
+    3300014: rotor1
+    3300016: rotor2
     4300000: Nave Media
     4300002: RotorD
     4300004: RotorE
+    4300006: NaveMedia
+    4300008: arma4
+    4300010: arma3
+    4300012: arma2
+    4300014: arma1
+    4300016: rotor1
+    4300018: rotor2
   materials:
     importMaterials: 1
     materialName: 0
@@ -76,8 +107,10 @@ ModelImporter:
     legStretch: .0500000007
     feetSpacing: 0
     rootMotionBoneName: 
+    hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
+  humanoidOversampling: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

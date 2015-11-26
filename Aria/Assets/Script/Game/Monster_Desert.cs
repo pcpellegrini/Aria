@@ -69,6 +69,7 @@ public class Monster_Desert : Monster {
 
         collisionAround.onTrigger += delegate (GameObject p_player)
         {
+            PlayerOnMonsterZone(true);
             _player = p_player;
             if (!_inSpitAttack)
             {
@@ -79,6 +80,7 @@ public class Monster_Desert : Monster {
         };
         collisionAround.onExitArea += delegate
         {
+            PlayerOnMonsterZone(false);
             if (_currentArea == MonsterCollisionManager.type.AROUND)
                 _currentArea = MonsterCollisionManager.type.AWAY;
             StartCoroutine(GoToAnimation(timeBetweenAttacks, "Walk"));
@@ -240,6 +242,9 @@ public class Monster_Desert : Monster {
         }
     }
 
-
+    public override void PlayerOnMonsterZone(bool p_value)
+    {
+        base.PlayerOnMonsterZone(p_value);
+    }
 
 }

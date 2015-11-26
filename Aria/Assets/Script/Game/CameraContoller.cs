@@ -35,7 +35,17 @@ public class CameraContoller : MonoBehaviour {
     protected Vector2 _camLimitsMin = new Vector2(-15, 0);
     protected Vector2 _camLimitsMax = new Vector2(15, 30);
     protected Vector2 _camLimitsRotationMin = new Vector2(358, 340);
+    public Vector2 camLimitsRotationMin
+    {
+        get { return _camLimitsRotationMin; }
+        set { _camLimitsRotationMin = value; }
+    }
     protected Vector2 _camLimitsRotationMax = new Vector2(25, 20);
+    public Vector2 camLimitsRotationMax
+    {
+        get { return _camLimitsRotationMax; }
+        set { _camLimitsRotationMax = value; }
+    }
     protected Rigidbody _mainRigidbody;
     protected Animator _aimAnim;
     protected int _aimFiring;

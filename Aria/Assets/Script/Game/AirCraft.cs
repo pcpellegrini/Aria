@@ -39,6 +39,8 @@ public class AirCraft : MonoBehaviour {
     public ParticleSystem[] normalGunTrail;
     public Transform fireExit;
     public Transform fireExitR;
+    public GameObject[] normalGun;
+    public GameObject[] specialGun;
     public AudioClip engineSound;
     public AudioClip engineSlowSound;
     public AudioClip boostSound;
@@ -53,6 +55,7 @@ public class AirCraft : MonoBehaviour {
     protected bool _normalGunLocked;
     protected bool _specialGunFiring;
     protected bool _specialGunLocked;
+    protected bool _inBarrelRoll;
     protected float _timeDT;
     protected float _normalWeaponHeatCount;
     protected float _specialWeaponHeatCount;
@@ -134,10 +137,19 @@ public class AirCraft : MonoBehaviour {
         };
         _collisionManager.onHitEnemy += delegate (Vector3 p_point, float p_damage)
         {
-            DecreaseEnergy(p_damage);
-            _flightController.ApplyImpactForce(p_point);
-            _anim.SetTrigger(_animIDShake);
-            Invoke("CancelAnim", 0.5f);
+                DecreaseEnergy(p_damage);
+                _flightController.ApplyImpactForceMonster(p_point);
+                _anim.SetTrigger(_animIDShake);
+                Invoke("CancelAnim", 0.8f);
+        };
+        _collisionManager.onHitEnemyLittle += delegate (Vector3 p_point, float p_damage)
+        {
+            if (!_inBarrelRoll)
+            {
+                DecreaseEnergy(p_damage);
+                _anim.SetTrigger(_animIDShake);
+                Invoke("CancelAnim", 0.5f);
+            }
         };
 
         soundController.PlaySound(SoundController.source.MUSIC, p_musicLevel);
@@ -207,12 +219,22 @@ public class AirCraft : MonoBehaviour {
     public virtual void Update()
     {
         InputControl();
+        for (int i = 0; i < normalGun.Length; i++)
+        {
+            int __num = i;
+            normalGun[__num].transform.localRotation = _currentCameraController.transform.localRotation;
+        }
+        for (int i = 0; i < specialGun.Length; i++)
+        {
+            int __num = i;
+            specialGun[__num].transform.localRotation = _currentCameraController.transform.localRotation;
+        }
     }
 
     public virtual void CancelAnim()
     {
-        //_mainAnim.enabled = false;
         _flightController.applyingForce = false;
+        _flightController.applyingForceMonster = false;
     }
 
     public virtual void InputControl() // Check Rotations control input
@@ -477,12 +499,14 @@ public class AirCraft : MonoBehaviour {
             // BarrelRoll
             if (Input.GetButtonDown("Barrel Roll Left") && !_flightController.barrelRollActive)
             {
+                _inBarrelRoll = true;
                 soundController.PlaySound(SoundController.source.BARREL, barrelRoll);
                 _anim.SetTrigger(_animIDBarrelLeft);
                 _flightController.barrelRollActive = true;
             }
             if (Input.GetButtonDown("Barrel Roll Right") && !_flightController.barrelRollActive)
             {
+                _inBarrelRoll = true;
                 soundController.PlaySound(SoundController.source.BARREL, barrelRoll);
                 _anim.SetTrigger(_animIDBarrelRight);
                 _flightController.barrelRollActive = true;
@@ -531,6 +555,7 @@ public class AirCraft : MonoBehaviour {
         switch (p_anim)
         {
             case "BarrelRoll":
+                _inBarrelRoll = false;
                 _flightController.barrelRollActive = false;
                 break;
         }

@@ -71,6 +71,12 @@ public class Flight : MonoBehaviour
         get { return _applyingForce; }
         set { _applyingForce = value; }
     }
+    private bool _applyingForceMonster;
+    public bool applyingForceMonster
+    {
+        get { return _applyingForceMonster; }
+        set { _applyingForceMonster = value; }
+    }
     private float _pitchDirection;
     public float pitchDirection
     {
@@ -111,6 +117,7 @@ public class Flight : MonoBehaviour
     private float _rollLimitMax = 150;
     private float _rollLimitMin = -150;
     private Vector3 _dirForce;
+    private Vector3 _dirForceMonster;
     private Rigidbody _rigidbody;
     private Quaternion _AddRotation;
     private Quaternion _AddRotationCameraTPV;
@@ -131,15 +138,21 @@ public class Flight : MonoBehaviour
     {
         _timeDT = Time.deltaTime;
 
-        if (!_applyingForce && _inGame )//&& !_barrelRollActive)
+        if (!_applyingForce && _inGame && !_applyingForceMonster)
         {
             RotationContol();
             AccelerationControl();
         }
         else if (_applyingForce)
         {
+            Vector3 __dir = new Vector3(_rigidbody.velocity.x, _dirForce.y *  impactForce, _rigidbody.velocity.z);
+            _rigidbody.velocity = __dir;
+            SpecialRotation();
+        }
+        else if (_applyingForceMonster)
+        {
             Vector3 __dir = new Vector3(_rigidbody.velocity.x, impactForce, _rigidbody.velocity.z);
-            _rigidbody.velocity = impactForce * _dirForce;
+            _rigidbody.velocity = impactForce * _dirForceMonster;
             SpecialRotation();
         }
     }
@@ -173,7 +186,14 @@ public class Flight : MonoBehaviour
 
     private void SpecialRotation()
     {
-        if (_pitch > 0)
+        if (_pitch > 0 && _applyingForce)
+        {
+            _pitchAdditive += (rotationPitchSpeed * -1);
+            _pitch = (_timeDT * _pitchAdditive);
+            _AddRotation.eulerAngles = new Vector3(_pitch, _yaw, -_roll);
+            _rigidbody.rotation = _AddRotation;
+        }
+        else if(_applyingForceMonster)
         {
             _pitchAdditive += (rotationPitchSpeed * -1);
             _pitch = (_timeDT * _pitchAdditive);
@@ -255,9 +275,11 @@ public class Flight : MonoBehaviour
         _applyingForce = true;
         
     }
-
-    private void CancelImpactForce()
+    public void ApplyImpactForceMonster(Vector3 p_point)
     {
-        _applyingForce = false;
+        _dirForceMonster = transform.position - p_point;
+        _dirForceMonster = new Vector3(_dirForce.x, _dirForce.y, _dirForce.z);
+        _applyingForceMonster = true;
+
     }
 }

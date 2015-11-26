@@ -7,9 +7,11 @@ public class Monster_Little : Monster {
     public MonsterCollisionManager collisionAround;
 
     public float timeGoingUp;
+    public ParticleSystem explosionBlood;
 
     protected bool _goUp;
     protected bool _attack;
+    protected bool _followPlayer;
     protected GameObject player;
     protected int _animRasante;
     protected Vector3 _origin;
@@ -26,13 +28,16 @@ public class Monster_Little : Monster {
         {
             if (!_attack)
             {
+                AirCraft __aircraft = p_player.transform.root.GetComponent<AirCraft>();
                 _rigidbody.velocity = Vector3.zero;
-                player = p_player;
+                player = __aircraft.airCraftBody;
                 _goUp = false;
                 _currentSpeed = 0f;
+                _followPlayer = false;
                 _attack = true;
                 transform.LookAt(player.transform);
-                _anim.SetBool(_animRasante, true); _rigidbody.AddForce((player.transform.position - transform.position) * 200f, ForceMode.Impulse);
+                _anim.SetBool(_animRasante, true);
+                //_rigidbody.AddForce((player.transform.position - transform.position) * 300f, ForceMode.Impulse);
             }
         };
         collisionAround.onExitArea += delegate
@@ -50,7 +55,24 @@ public class Monster_Little : Monster {
     
     void Update()
     {
-
+        if (_attack)
+        {
+            if (_currentSpeed < maxSpeed)
+            {
+                _currentSpeed += acceletaion;
+            }
+            transform.LookAt(player.transform);
+            _rigidbody.velocity = (player.transform.position - transform.position) * _currentSpeed;
+        }
+        else if (_followPlayer)
+        {
+            if (_currentSpeed < maxSpeed/10)
+            {
+                _currentSpeed += acceletaion;
+            }
+            transform.LookAt(player.transform);
+            _rigidbody.velocity = (player.transform.position - transform.position) * _currentSpeed;
+        }
 	}
 
     public override void Damage(string p_point, float p_damage, float p_time, Bullet p_bullet)
@@ -68,8 +90,9 @@ public class Monster_Little : Monster {
         energy -= p_damage * 1f;
         if (energy <= 0)
         {
-            Debug.Log("isDed");
-            Disable();
+            Invoke("Disable", explosionBlood.duration);
+            explosionBlood.Play();
+            body.SetActive(false);
         }
     }
 
@@ -92,8 +115,11 @@ public class Monster_Little : Monster {
         _rigidbody.velocity = Vector3.zero;
         _anim.enabled = false;
         this.enabled = false;
+        _attack = false;
         _hasAttacked = false;
         OnDisableMonster();
+        explosionBlood.Stop();
+        body.SetActive(true);
     }
 
     private void StopGoUp()
@@ -108,34 +134,47 @@ public class Monster_Little : Monster {
     public override void HitOnPlayer()
     {
         base.HitOnPlayer();
-        Disable();
+        Invoke("Disable", explosionBlood.duration);
+        explosionBlood.Play();
+        body.SetActive(false);
     }
 
-    public void GoHome()
+    public override void GoHome(Vector3 p_position)
     {
+        base.GoHome(p_position);
+        CancelInvoke("InvokeGoHome");
+        CancelInvoke("GoPatrol");
         if (!_attack)
         {
             Invoke("GoPatrol", _timePatrol);
             _rigidbody.velocity = Vector3.zero;
             _anim.SetBool(_animRasante, false);
-            transform.LookAt(_origin);
-            Vector3 __distance = _origin - transform.position;
+            transform.LookAt(p_position);
+            Vector3 __distance = p_position - transform.position;
             float __mag = __distance.magnitude;
             Vector3 __dir = __distance / __mag;
             _rigidbody.velocity = (__dir) * maxSpeed;
         }
     }
 
+    public override void InvokeGoHome()
+    {
+        base.InvokeGoHome();
+        _inPatrol = false;
+        GoHome(_origin);
+    }
+
     public void GoPatrol()
     {
         if (!_attack)
         {
+            _inPatrol = true;
             _rigidbody.velocity = Vector3.zero;
             _timePatrol = UnityEngine.Random.Range(5, 10);
-            Invoke("GoHome", _timePatrol);
-            Vector3 __pos = _origin + (UnityEngine.Random.insideUnitSphere * 100);
+            Invoke("InvokeGoHome", _timePatrol);
+            Vector3 __pos = _origin + (UnityEngine.Random.insideUnitSphere * 50);
             transform.LookAt(__pos);
-            Vector3 __distance = __pos - transform.position;
+            Vector3 __distance = transform.position - __pos;
             float __mag = __distance.magnitude;
             Vector3 __dir = __distance / __mag;
             _rigidbody.velocity = (__dir) * maxSpeed;
@@ -146,5 +185,16 @@ public class Monster_Little : Monster {
     public override void OnDisableMonster()
     {
         base.OnDisableMonster();
+    }
+
+    public override void FollowPlayer(GameObject p_player)
+    {
+        base.FollowPlayer(p_player);
+        if (!_attack)
+        {
+            _currentSpeed = 0f;
+            _followPlayer = true;
+            player = p_player;
+        }
     }
 }

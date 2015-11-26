@@ -6,6 +6,7 @@ public class AircraftCollisionManager : MonoBehaviour {
 
     public event Action<Vector3> onHitGround;
     public event Action<Vector3> onHitStaticObject;
+    public event Action<Vector3, float> onHitEnemyLittle;
     public event Action<Vector3, float> onHitEnemy;
 
     // Use this for initialization
@@ -32,7 +33,13 @@ public class AircraftCollisionManager : MonoBehaviour {
             Monster __monster = p_collision.gameObject.transform.root.GetComponent<Monster>();
             if (__monster != null)
             {
-                if ((__monster.type == Monster.monsterType.LITTLE && !__monster.hasAttacked) || __monster.type != Monster.monsterType.LITTLE)
+                if ((__monster.type == Monster.monsterType.LITTLE && !__monster.hasAttacked))
+                {
+                    __monster.hasAttacked = true;
+                    __monster.HitOnPlayer();
+                    if (onHitEnemyLittle != null) onHitEnemyLittle(__point, __monster.hitDamage);
+                }
+                else if (__monster.type != Monster.monsterType.LITTLE)
                 {
                     __monster.hasAttacked = true;
                     __monster.HitOnPlayer();
