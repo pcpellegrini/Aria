@@ -99,6 +99,7 @@ ModelImporter:
     7400010: Roar
     7400012: Death
     7400014: DeathLoop
+    7400016: GrabOff
     9500000: //RootNode
     13700000: Box001
   materials:
@@ -847,6 +848,108 @@ ModelImporter:
       loop: 0
       loopTime: 1
       loopBlend: 1
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Bone001
+        weight: 1
+      - path: Bone001/Bone002
+        weight: 1
+      - path: Bone001/Bone002/Bone003
+        weight: 1
+      - path: Bone001/Bone002/Bone003/Bone004
+        weight: 1
+      - path: Bone001/Bone002/Bone003/Bone004/Bone005
+        weight: 1
+      - path: Bone001/Bone002/Bone003/Bone004/Bone005/ponta 9
+        weight: 1
+      - path: Bone001/Bone002/Bone019
+        weight: 1
+      - path: Bone001/Bone002/Bone019/Bone020
+        weight: 1
+      - path: Bone001/Bone002/Bone019/Bone020/ponta 4
+        weight: 1
+      - path: Bone001/Bone002/Bone031
+        weight: 1
+      - path: Bone001/Bone002/Bone031/Bone027
+        weight: 1
+      - path: Bone001/Bone002/Bone031/Bone027/ponta 5
+        weight: 1
+      - path: Bone001/Bone007
+        weight: 1
+      - path: Bone001/Bone007/Bone009
+        weight: 1
+      - path: Bone001/Bone007/Bone009/ponta 1
+        weight: 1
+      - path: Bone001/Bone007/ponta
+        weight: 1
+      - path: Bone001/Bone011
+        weight: 1
+      - path: Bone001/Bone011/Bone012
+        weight: 1
+      - path: Bone001/Bone011/Bone012/Bone013
+        weight: 1
+      - path: Bone001/Bone011/Bone012/Bone013/ponta 6
+        weight: 1
+      - path: Bone001/Bone011/Bone012/Bone015
+        weight: 1
+      - path: Bone001/Bone011/Bone012/Bone015/ponta 7
+        weight: 1
+      - path: Bone001/Bone011/Bone017
+        weight: 1
+      - path: Bone001/Bone011/Bone017/ponta 2
+        weight: 1
+      - path: Bone001/Bone026
+        weight: 1
+      - path: Bone001/Bone026/Bone022
+        weight: 1
+      - path: Bone001/Bone026/Bone022/ponta 3
+        weight: 1
+      - path: Bone001/Bone026/Bone025
+        weight: 1
+      - path: Bone001/Bone026/Bone025/Bone024
+        weight: 1
+      - path: Bone001/Bone026/Bone025/Bone024/Bone023
+        weight: 1
+      - path: Bone001/Bone026/Bone025/Bone028
+        weight: 1
+      - path: Bone001/Bone026/Bone025/Bone028/ponta 8
+        weight: 1
+      - path: Box001
+        weight: 1
+      - path: Group001
+        weight: 1
+      - path: Group001/Object001
+        weight: 1
+      - path: Group001/Object002
+        weight: 1
+      - path: Group001/Plane001
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: GrabOff
+      takeName: Take 001
+      firstFrame: 501
+      lastFrame: 519
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0

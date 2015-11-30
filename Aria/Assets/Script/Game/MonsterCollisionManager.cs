@@ -20,18 +20,23 @@ public class MonsterCollisionManager : MonoBehaviour {
     public event Action onExitArea;
     public event Action<Vector3> onGrabCollision;
 
-    void OnCollisionEnter(Collision p_collision)
+    /*void OnCollisionEnter(Collision p_collision)
     {
+        Debug.Log("collided");
         if (p_collision.gameObject.tag == "island" && positionType == type.BODY)
         {
             Debug.Log("hitIsland");
-            if (onGrabCollision != null) onGrabCollision(p_collision.contacts[0].point);
+            
         }
-    }
+    }*/
 
     void OnTriggerEnter(Collider p_collider)
     {
-        if (p_collider.tag == "Player" && positionType != type.BODY)
+        if (p_collider.tag == "island" && positionType == type.BODY)
+        {
+            if (onGrabCollision != null) onGrabCollision(p_collider.transform.position);
+        }
+        else if (p_collider.tag == "Player" && positionType != type.BODY)
         {
             if (onTrigger != null) onTrigger(p_collider.gameObject);
         }

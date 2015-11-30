@@ -30,7 +30,7 @@ public class AircraftCollisionManager : MonoBehaviour {
         }
         else if (__GO.tag == "enemy")
         {
-            Monster __monster = p_collision.gameObject.transform.root.GetComponent<Monster>();
+            Monster __monster = __GO.transform.root.GetComponent<Monster>();
             if (__monster != null)
             {
                 if ((__monster.type == Monster.monsterType.LITTLE && !__monster.hasAttacked))
@@ -39,7 +39,7 @@ public class AircraftCollisionManager : MonoBehaviour {
                     __monster.HitOnPlayer();
                     if (onHitEnemyLittle != null) onHitEnemyLittle(__point, __monster.hitDamage);
                 }
-                else if (__monster.type != Monster.monsterType.LITTLE)
+                else if (__monster.type != Monster.monsterType.LITTLE && !__monster.hasAttacked)
                 {
                     __monster.hasAttacked = true;
                     __monster.HitOnPlayer();

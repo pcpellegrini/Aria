@@ -13,6 +13,7 @@ public class GuiManager : MonoBehaviour {
     public Slider armorSlider;
     public Slider monsterEnergy;
     public Button menuBtn;
+    public Text timeText;
 
     [HideInInspector]
     public bool inGame;
@@ -35,6 +36,9 @@ public class GuiManager : MonoBehaviour {
                 break;
             case "monsterEnergy":
                 monsterEnergy.value = p_value;
+                break;
+            case "time":
+                timeText.text = p_value.ToString();
                 break;
         }
     }

@@ -20,6 +20,9 @@ public class Monster_Little : Monster {
     public override void ManualStart(AirCraft p_playerCS)
     {
         base.ManualStart(p_playerCS);
+        float __min = maxSpeed - (maxSpeed * 0.6f);
+        float __max = maxSpeed + (maxSpeed * 0.2f);
+        maxSpeed = UnityEngine.Random.Range(__min, __max);
         _anim = body.GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
         _anim.enabled = false;
@@ -75,11 +78,10 @@ public class Monster_Little : Monster {
         }
 	}
 
-    public override void Damage(string p_point, float p_damage, float p_time, Bullet p_bullet)
+    public override void Damage(string p_point, float p_damage, float p_time, Bullet p_bullet, Vector3 p_pos)
     {
-        base.Damage(p_point, p_time, p_damage, p_bullet);
+        base.Damage(p_point, p_time, p_damage, p_bullet, p_pos);
         StartCoroutine(ApplyDamage(p_point, p_damage, p_time, p_bullet));
-
     }
 
     IEnumerator ApplyDamage(string p_point, float p_damage, float p_time, Bullet p_bullet)
@@ -120,6 +122,7 @@ public class Monster_Little : Monster {
         OnDisableMonster();
         explosionBlood.Stop();
         body.SetActive(true);
+        _wasThrow = false;
     }
 
     private void StopGoUp()
@@ -152,6 +155,8 @@ public class Monster_Little : Monster {
             transform.LookAt(p_position);
             Vector3 __distance = p_position - transform.position;
             float __mag = __distance.magnitude;
+            if (__mag == 0)
+                __mag = 0.01f;
             Vector3 __dir = __distance / __mag;
             _rigidbody.velocity = (__dir) * maxSpeed;
         }
@@ -196,5 +201,22 @@ public class Monster_Little : Monster {
             _followPlayer = true;
             player = p_player;
         }
+    }
+
+    public override void ThrowMonster(Vector3 p_pos, float p_radius)
+    {
+        base.ThrowMonster(p_pos, p_radius);
+        _attack = false;
+        _wasThrow = true;
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.AddExplosionForce(maxSpeed, p_pos, p_radius);
+        Invoke("ThrowInvoke", 1f);
+    }
+
+    private void ThrowInvoke()
+    {
+        Invoke("Disable", explosionBlood.duration);
+        explosionBlood.Play();
+        body.SetActive(false);
     }
 }

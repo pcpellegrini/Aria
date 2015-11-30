@@ -15,6 +15,7 @@ public class AirCraft : MonoBehaviour {
     public float energy = 100f;
     public float armorEnergy = 10f;
     public float recoverySpeed;
+    public float barrelRollRadius;
     public LayerMask hitLayer;
     public float specialWeaponDamage = 100f;
     public float specialWeaponSpeed = 0.08f;
@@ -138,7 +139,7 @@ public class AirCraft : MonoBehaviour {
         _collisionManager.onHitEnemy += delegate (Vector3 p_point, float p_damage)
         {
                 DecreaseEnergy(p_damage);
-                _flightController.ApplyImpactForceMonster(p_point);
+                //_flightController.ApplyImpactForceMonster(p_point);
                 _anim.SetTrigger(_animIDShake);
                 Invoke("CancelAnim", 0.8f);
         };
@@ -228,6 +229,10 @@ public class AirCraft : MonoBehaviour {
         {
             int __num = i;
             specialGun[__num].transform.localRotation = _currentCameraController.transform.localRotation;
+        }
+        if (_inBarrelRoll)
+        {
+            BarrelRollForce();
         }
     }
 
@@ -352,8 +357,11 @@ public class AirCraft : MonoBehaviour {
                 _flightController.rotating = false;
             }
 
-            if (_currentCameraController.type == CameraContoller.cameraType.THIRD_PERSON_VSION)
+           /* if (_currentCameraController.type == CameraContoller.cameraType.THIRD_PERSON_VSION)
+            {
                 _currentCameraController.roll = _flightController.roll;
+                Debug.Log(_flightController.roll);
+            }*/
 
             if (_flightController.pitchDirection != 0f && !_flightController.pitching)
             {
@@ -499,6 +507,7 @@ public class AirCraft : MonoBehaviour {
             // BarrelRoll
             if (Input.GetButtonDown("Barrel Roll Left") && !_flightController.barrelRollActive)
             {
+                //BarrelRollForce();
                 _inBarrelRoll = true;
                 soundController.PlaySound(SoundController.source.BARREL, barrelRoll);
                 _anim.SetTrigger(_animIDBarrelLeft);
@@ -506,10 +515,27 @@ public class AirCraft : MonoBehaviour {
             }
             if (Input.GetButtonDown("Barrel Roll Right") && !_flightController.barrelRollActive)
             {
+                //BarrelRollForce();
                 _inBarrelRoll = true;
                 soundController.PlaySound(SoundController.source.BARREL, barrelRoll);
                 _anim.SetTrigger(_animIDBarrelRight);
                 _flightController.barrelRollActive = true;
+            }
+        }
+    }
+
+    public virtual void BarrelRollForce()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(airCraftBody.transform.position, barrelRollRadius);
+        foreach(Collider tmp in hitColliders)
+        {
+            Monster __monster = tmp.transform.root.gameObject.GetComponent<Monster>();
+            if (__monster != null)
+            {
+                if (!__monster.wasThrow && __monster.type == Monster.monsterType.LITTLE)
+                {
+                    __monster.ThrowMonster(airCraftBody.transform.position, barrelRollRadius);
+                }
             }
         }
     }
@@ -708,7 +734,7 @@ public class AirCraft : MonoBehaviour {
             if (__monster != null)
             {
                 float __timeToHit = __hit.distance * p_speed * _timeDT;
-                __monster.Damage(__hit.collider.tag, p_damage, __timeToHit, p_bullet);
+                __monster.Damage(__hit.collider.tag, p_damage, __timeToHit, p_bullet, __hit.point);
                 Invoke("SoundHit", __timeToHit);
                 _currentCameraController.AimHit();
             }

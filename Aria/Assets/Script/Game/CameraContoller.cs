@@ -51,14 +51,13 @@ public class CameraContoller : MonoBehaviour {
     protected int _aimFiring;
     protected int _aimHit;
 
-    private float _roll;
+    private float _roll = 0;
     public float roll
     {
         get { return _roll; }
         set { _roll = value; }
     }
-
-    // Use this for initialization
+    
     public virtual void ManualStart (Rigidbody p_rigibody) {
         _mainRigidbody = p_rigibody;
         _timeDT = Time.deltaTime;
@@ -126,23 +125,23 @@ public class CameraContoller : MonoBehaviour {
          {
              aim.transform.localPosition += new Vector3(0f, __dif.y, 0f);
          }
-         
+
+        //_roll = -transform.root.rotation.eulerAngles.z;
         Vector2 __camDif = __aimScreen - _mouseOrigin;
-       // __camDif = (__mousePos - _mouseStartPos)/100;
+        // __camDif = (__mousePos - _mouseStartPos)/100;
         //_mouseStartPos = __mousePos;
         /*Quaternion __rot = transform.localRotation;
         __rot.eulerAngles = new Vector3(__camDif.y, __camDif.x, _roll);
         transform.localRotation = __rot;*/
         //if (__camDif.x < 0 && transform.localPosition.x < 5)
-           // transform.localPosition = new Vector3(transform.localPosition.x + (__camDif.x / 10), transform.localPosition.y, transform.localPosition.z);
-
+        // transform.localPosition = new Vector3(transform.localPosition.x + (__camDif.x / 10), transform.localPosition.y, transform.localPosition.z);
         if (__camDif.y > 0 && (transform.localRotation.eulerAngles.x >= _camLimitsRotationMin.x || transform.localRotation.eulerAngles.x < _camLimitsRotationMax.x + 1))
          {
              Quaternion __rot = transform.localRotation;
              if (__rot.eulerAngles.x - __camDif.y < _camLimitsRotationMin.x && __rot.eulerAngles.x >= _camLimitsRotationMin.x)
                  __rot.eulerAngles = new Vector3(_camLimitsRotationMin.x, __rot.eulerAngles.y, _roll);
              else
-                 __rot.eulerAngles = new Vector3(__rot.eulerAngles.x -__camDif.y, __rot.eulerAngles.y, _roll);
+                 __rot.eulerAngles = new Vector3(__rot.eulerAngles.x -__camDif.y, __rot.eulerAngles.y,  _roll);
              transform.localRotation = __rot;
         }
          else if (__camDif.y < 0 && (transform.localRotation.eulerAngles.x <= _camLimitsRotationMax.x || transform.localRotation.eulerAngles.x >= _camLimitsRotationMin.x))

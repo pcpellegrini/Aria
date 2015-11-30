@@ -18,18 +18,25 @@ public class Manager : MonoBehaviour {
     public GameObject aimHUD;
     public AudioClip levelMusic;
     public AudioSource monsterSource;
+    public float timeToSpawnLittleMonsters = 20f;
     public Transform[] spawnPoints;
+    public float[] timeEvents;
 
     private AirCraft _currentPLayerCS;
     private Info _gameInfo;
     private GameObject _currentPLayer;
     private AudioSource _audioSource;
-    private int _currentMonsterRelease = 5;
+    private int _currentMonsterRelease = 2;
     private int _monsterCount = 0;
-    private int _maxMonster = 50;
+    private int _spawnedMonsterCount = 0;
+    private int _maxMonster = 20;
+    private float timeCount = 600;
+    private bool[] completedEvents = new bool[3];
 
     private List<Bullet> _bullets = new List<Bullet>();
     private List<Monster> _monsterLittle = new List<Monster>();
+    private List<Monster> _monsterLittleUsed = new List<Monster>();
+    private List<Monster> _monsterLittleFree = new List<Monster>();
     List<GameObject> _bulletsGO = new List<GameObject>();
     List<GameObject> _monsterLittleGO = new List<GameObject>();
 
@@ -65,7 +72,10 @@ public class Manager : MonoBehaviour {
             _monsterLittle[__num].onDisable += delegate
             {
                 _monsterCount--;
+                _monsterLittleUsed.Remove(_monsterLittle[__num]);
+                _monsterLittleFree.Add(_monsterLittle[__num]);
             };
+            _monsterLittleFree.Add(_monsterLittle[__num]);
             _monsterLittle[__num].isActive = false;
             _monsterLittle[__num].enabled = false;
             _monsterLittle[__num].ManualStart(_currentPLayerCS);
@@ -110,6 +120,20 @@ public class Manager : MonoBehaviour {
                 }
             }
         };
+        currentMonster.eventOne += delegate
+        {
+            completedEvents[0] = true;
+            _currentMonsterRelease = 7;
+            currentMonster.timeBetweenAttacks -= 5;
+            currentMonster.idleTime -= 5;
+        };
+        currentMonster.eventTwo += delegate
+        {
+            completedEvents[1] = true;
+            _currentMonsterRelease = 10;
+            currentMonster.timeBetweenAttacks -= 5;
+            currentMonster.idleTime -= 5;
+        };
         guiManager.inGame = true;
         _currentPLayerCS.TPSCameraController.monster = currentMonster.gameObject;
         _currentPLayerCS.FPSCameraController.monster = currentMonster.gameObject;
@@ -120,7 +144,7 @@ public class Manager : MonoBehaviour {
         {
             Destroy(_gameInfo);
         };
-        InvokeRepeating("ReleaseMonsters", 10f, 20f);
+        StartCoroutine(ReleaseMonsters(timeToSpawnLittleMonsters));
         if (currentMonster.type == Monster.monsterType.AERIAL)
         {
             currentMonster.islands = spawnPoints;
@@ -130,39 +154,97 @@ public class Manager : MonoBehaviour {
     {
         if (Input.GetButtonDown("Pause"))
         {
-            if (guiManager.inGame)
+            PauseGame();
+        }
+        if (guiManager.inGame)
+        {
+            timeCount -= Time.deltaTime;
+            guiManager.ChangeValue("time", Mathf.Round(timeCount));
+        }
+        if (timeCount <= timeEvents[0] && !completedEvents[0])
+        {
+            completedEvents[0] = true;
+            _currentMonsterRelease = 7;
+            currentMonster.timeBetweenAttacks -= 5;
+            currentMonster.idleTime -= 5;
+            timeToSpawnLittleMonsters += 5;
+        }
+        if (timeCount <= timeEvents[1] && !completedEvents[1])
+        {
+            completedEvents[1] = true;
+            _currentMonsterRelease = 15;
+            currentMonster.timeBetweenAttacks -= 5;
+            currentMonster.idleTime -= 5;
+            timeToSpawnLittleMonsters += 5;
+        }
+
+    }
+
+    public void PauseGame()
+    {
+        if (guiManager.inGame)
+        {
+            for (int i = 0; i < _monsterLittleUsed.Count; i++)
             {
-                _currentPLayerCS.PauseGame(true);
-                currentMonster.PauseGame(true);
-                _currentPLayerCS.enabled = false;
-                currentMonster.enabled = false;
-                UnityEngine.Cursor.visible = true;
-                guiManager.inGame = false;
-                Time.timeScale = 0;
+                int __num = i;
+                _monsterLittleUsed[__num].enabled = false;
             }
-            else
+            _currentPLayerCS.PauseGame(true);
+            currentMonster.PauseGame(true);
+            _currentPLayerCS.enabled = false;
+            currentMonster.enabled = false;
+            UnityEngine.Cursor.visible = true;
+            guiManager.inGame = false;
+            Time.timeScale = 0;
+        }
+        else
+        {
+            for (int i = 0; i < _monsterLittleUsed.Count; i++)
             {
-                UnityEngine.Cursor.visible = false;
-                guiManager.inGame = true;
-                _currentPLayerCS.PauseGame(false);
-                currentMonster.PauseGame(false);
-                _currentPLayerCS.enabled = true;
-                currentMonster.enabled = true;
-                Time.timeScale = 1;
+                int __num = i;
+                _monsterLittleUsed[__num].enabled = true;
             }
+            UnityEngine.Cursor.visible = false;
+            guiManager.inGame = true;
+            _currentPLayerCS.PauseGame(false);
+            currentMonster.PauseGame(false);
+            _currentPLayerCS.enabled = true;
+            currentMonster.enabled = true;
+            Time.timeScale = 1;
         }
     }
 
-    private void ReleaseMonsters()
+    IEnumerator ReleaseMonsters(float p_time)
     {
-        for (int j = 0; j < _currentMonsterRelease; j++)
+        yield return new WaitForSeconds(p_time);
+        for (int i = 0; i < _currentMonsterRelease; i++)
         {
-            int __num2 = j;
-            for (int i = 0; i < _monsterLittle.Count; i++)
+            int __num = i;
+            if (_monsterLittleFree.Count > 0)
+            {
+                _monsterLittleUsed.Add(_monsterLittleFree[0]);
+                int __idx = _monsterLittleUsed.Count - 1;
+                _monsterLittleFree.RemoveAt(0);
+                if (_gameInfo.selectedLevel == "01")
+                {
+                    _monsterLittleUsed[__idx].gameObject.transform.position = currentMonster.vulcanExit.position + (Random.insideUnitSphere * 30);
+                }
+                else
+                {
+                    _monsterLittleUsed[__idx].gameObject.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].position + (Random.insideUnitSphere * 5);
+                }
+                _monsterLittleUsed[__idx].isActive = true;
+                _monsterLittleUsed[__idx].enabled = true;
+                _monsterLittleUsed[__idx].Enable();
+            }
+        }
+        //_currentMonsterRelease += 1;
+        /*for (int i = 0; i < _monsterLittle.Count; i++)
             {
                 int __num = i;
                 if (!_monsterLittle[__num].isActive && _monsterCount < _maxMonster)
                 {
+                    _spawnedMonsterCount++;
                     if (_gameInfo.selectedLevel == "01")
                     {
                         _monsterLittle[__num].gameObject.transform.position = currentMonster.vulcanExit.position + (Random.insideUnitSphere * 30);
@@ -170,14 +252,18 @@ public class Manager : MonoBehaviour {
                     else
                     {
                         _monsterLittle[__num].gameObject.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].position + (Random.insideUnitSphere * 5);
-                    }                    
+                    }
                     _monsterLittle[__num].isActive = true;
                     _monsterLittle[__num].enabled = true;
                     _monsterLittle[__num].Enable();
                     _monsterCount++;
+                }
+                if (_spawnedMonsterCount >= _currentMonsterRelease || _monsterCount >= _maxMonster)
+                {
                     break;
                 }
-            }
-        }
+            }*/
+            _spawnedMonsterCount = 0;
+        StartCoroutine(ReleaseMonsters(timeToSpawnLittleMonsters));
     }
 }
